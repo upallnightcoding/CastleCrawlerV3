@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Step 
 {
-    public int col = 0;
-    public int row = 0;
+    public int Col { get; set; } = 0;
+    public int Row { get; set; } = 0;
 
     public Step(int col, int row)
     {
-        this.col = col;
-        this.row = row;
+        this.Col = col;
+        this.Row = row;
     }
 }

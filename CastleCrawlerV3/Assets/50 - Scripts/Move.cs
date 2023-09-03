@@ -33,30 +33,41 @@ public class Move
         }
     }
 
-    public TilePosition IsValid(TilePosition tile, TileMngr tileMgr)
+    public void DebugIt()
+    {
+        Debug.Log($"Move: {moveName}");
+    }
+
+    public TilePosition IsValid(TilePosition beginTile, TileMngr tileMgr)
     {
         bool valid = true;
-        TilePosition nextTile = new TilePosition(tile);
+        TilePosition nextTile = new TilePosition(beginTile);
         Stack<TilePosition> tracking = new Stack<TilePosition>();
 
         for (int i = 0; (i < move.Length) && valid; i++)
         {
-            //nextTile.MoveToNextTile(move[i]);
+            nextTile.MoveToNextTile(move[i]);
 
-            //valid = (nextTile.IsValid() && tileMgr.IsTileOpen(nextTile));
+            valid = (nextTile.IsValid() && tileMgr.IsTileOpen(nextTile));
 
             if (valid)
             {
-                //tileMgr.SetTileAsVisted(nextTile);
                 tracking.Push(new TilePosition(nextTile));
             }
         }
 
-        if (!valid)
+        if (valid)
         {
             foreach (TilePosition position in tracking)
             {
-                //tileMgr.ResetTile(position);
+                tileMgr.PathTile(position);
+            }
+        }
+        else
+        {
+            foreach (TilePosition position in tracking)
+            {
+                tileMgr.ResetTile(position);
             }
 
             nextTile = null;

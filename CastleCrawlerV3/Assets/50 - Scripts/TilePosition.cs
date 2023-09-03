@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class TilePosition 
 {
-    public int Col { get; private set; }
-    public int Row { get; private set; }
+    public int Col { get; private set; } = 0;
+    public int Row { get; private set; } = 0;
 
     public TilePosition(int col, int row)
     {
@@ -17,4 +17,22 @@ public class TilePosition
     {
 
     }
+
+    public void MoveToNextTile(Step step, bool direction = true)
+    {
+        Col += step.Col * (direction ? 1 : -1);
+        Row += step.Row * (direction ? 1 : -1);
+    }
+
+    public bool IsValid()
+    {
+        bool colPos = (Col >= 0) && (Col < BoardCntrl.boardSize);
+        bool rowPos = (Row >= 0) && (Row < BoardCntrl.boardSize);
+
+        return (colPos && rowPos);
+    }
+
+    //public Vector3 GetTilePos(int x, int z) => new Vector3(x, 0.0f, z);
+
+    public Vector3 GetTilePos() => new Vector3(Col, 0.0f, Row);
 }

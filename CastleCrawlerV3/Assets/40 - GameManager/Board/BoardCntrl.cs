@@ -7,11 +7,16 @@ public class BoardCntrl : MonoBehaviour
     [SerializeField] private GameData gameData;
     [SerializeField] private GameObject tilePreFab;
     [SerializeField] private Transform parent;
+    [SerializeField] private TileMngr tileMngr;
+    [SerializeField] private TileSO TileBlankSO;
+    [SerializeField] private TileSO TileCastleSO;
+    [SerializeField] private TileSO TileCrownSO;
 
-    private int boardSize;
+    public static int boardSize = 0;
 
     private TilePosition startPosition;
     private TilePosition finalPosition;
+    private TilePosition currentPlayPos;
 
     private Dictionary<string, Move> moveDictionary = null;
 
@@ -21,12 +26,15 @@ public class BoardCntrl : MonoBehaviour
     public void Start()
     {
         Initialize();
+        
         StartNewGame();
     }
 
     public void Initialize()
     {
         boardSize = gameData.boardSize;
+
+        tileMngr.Initialize();
 
         moveDictionary = new Dictionary<string, Move>();
 
@@ -39,6 +47,7 @@ public class BoardCntrl : MonoBehaviour
     public void StartNewGame()
     {
         DrawBoard();
+        CreateAPath();
     }
 
     public void DrawBoard()
@@ -47,9 +56,7 @@ public class BoardCntrl : MonoBehaviour
         {
             for (int row = 0; row < boardSize; row++)
             {
-                Vector3 position = GetTilePos(col, row);
-                GameObject tile = Instantiate(tilePreFab, position, Quaternion.identity, parent);
-                tile.GetComponent<TileCntrl>().Tile = new TileCastle(gameData);
+                tileMngr.CreateTile(new TilePosition(col, row), TileBlankSO);
             }
         }
     }
@@ -58,6 +65,11 @@ public class BoardCntrl : MonoBehaviour
     {
         int level = 0;
         int count = 0;
+
+        startPosition = SelectStartingPoint();
+
+        tileMngr.CrownTile(startPosition);
+
         TilePosition tile = new TilePosition(startPosition);
         Stack<Move> moves = new Stack<Move>();
 
@@ -70,7 +82,7 @@ public class BoardCntrl : MonoBehaviour
             {
                 if (moveDictionary.TryGetValue(gameData.listOfMoves[moveIndex[i]], out Move move))
                 {
-                    //finalPosition = move.IsValid(tile, tileMngr);
+                    finalPosition = move.IsValid(tile, tileMngr);
 
                     if (finalPosition != null)
                     {
@@ -78,6 +90,7 @@ public class BoardCntrl : MonoBehaviour
                         moves.Push(move);
                         tile = new TilePosition(finalPosition);
                         level++;
+                        move.DebugIt();
                     }
                 }
             }
@@ -85,9 +98,9 @@ public class BoardCntrl : MonoBehaviour
             count++;
         }
 
-        //tileMngr.SetEndingTile(finalPosition);
+        tileMngr.CastleTile(finalPosition);
 
-        //currentPlayPos = new TilePosition(startPosition);
+        currentPlayPos = new TilePosition(startPosition);
 
         return (moves);
     }
@@ -114,5 +127,22 @@ public class BoardCntrl : MonoBehaviour
         return (moves);
     }
 
-    private Vector3 GetTilePos(int x, int z) => new Vector3(x, 0.0f, z);
+    private TilePosition SelectRandomPosition()
+    {
+        int col = Random.Range(0, boardSize);
+        int row = Random.Range(0, boardSize);
+
+        return (new TilePosition(col, row));
+    }
+
+    private TilePosition SelectStartingPoint()
+    {
+        TilePosition startPosition = SelectRandomPosition();
+
+        tileMngr.CreateTile(startPosition, TileCrownSO);
+
+        return (startPosition);
+    }
+
+    //private Vector3 GetTilePos(int x, int z) => new Vector3(x, 0.0f, z);
 }

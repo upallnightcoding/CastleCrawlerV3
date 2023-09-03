@@ -12,17 +12,20 @@ public class GameData : ScriptableObject
     public static readonly Step WEST_STEP = new Step(-1, 0);
 
     [Header("Game Attributes")]
-    public int boardSize;
     public int safeGuardLimit;
     public int level;
+    public bool debugSw;
+    public int boardSize;
 
     [Header("Tile Background Colors")]
     public Material TileColorGray;
     public Material TileColorWhite;
 
     [Header("Game Sprites")]
-    public Sprite crownSprite;
-    public Sprite castleSprite;
+    public TileSO tileBlankSO;
+    public TileSO tileCastleSO;
+    public TileSO tileCrownSO;
+    public TileSO tilePathSO;
 
     [Header("Player Moves")]
     public string[] listOfMoves;

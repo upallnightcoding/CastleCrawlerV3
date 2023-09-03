@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class TileBase
+public interface TileBase
 {
-    public abstract Material GetBackGround();
+    public Sprite GetBackGround();
 
-    public abstract Sprite GetIcon();
+    public Sprite GetSprite();
 
-    public abstract string GetPrompt();
+    public string GetPrompt();
 
-    public abstract bool IsTileOpen();
+    public bool IsTileOpen();
 }
