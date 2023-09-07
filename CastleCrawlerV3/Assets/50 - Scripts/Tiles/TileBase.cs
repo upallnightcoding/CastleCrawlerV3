@@ -11,4 +11,8 @@ public interface TileBase
     public string GetPrompt();
 
     public bool IsTileOpen();
+
+    public bool IsTileInPlay();
+
+    public bool IsSupportProp();
 }

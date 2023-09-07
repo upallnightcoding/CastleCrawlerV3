@@ -52,6 +52,11 @@ public class TileCntrl : MonoBehaviour
     
     }
 
+    public void Set(Sprite background)
+    {
+        this.background.sprite = background;
+    }
+
     /*public void SetTileAsVisted()
     {
         SetTile(TileState.VISITED, GameManagerCntrl.Instance.DisplayTileMaterial());

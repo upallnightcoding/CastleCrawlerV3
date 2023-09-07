@@ -43,13 +43,53 @@ public class TileMngr : MonoBehaviour
         Set(position.Col, position.Row, tile, tileSO);
     }
 
+    public void Set(TilePosition position, Sprite color)
+    {
+        tileCntrls[position.Col, position.Row].Set(color);
+    }
+
+    public bool IsSupportProp(TilePosition position)
+    {
+        return (tileCntrls[position.Col, position.Row].Tile.IsSupportProp());
+    }
+
+    public bool IsMoveValid(TilePosition position)
+    {
+        bool offTheBoard = IsOffTheBoard(position);
+        bool tileIsOpen = false;
+
+        if (offTheBoard)
+        {
+            //GameManagerCntrl.Instance.DisplayIllegalMoveBanner();
+        }
+        else
+        {
+            tileIsOpen = tileCntrls[position.Col, position.Row].Tile.IsTileInPlay();
+        }
+
+        return (!offTheBoard && tileIsOpen);
+    }
+
     private void Set(int col, int row, GameObject tile, TileSO tileSO)
     {
+        if (tileCntrls[col, row] != null)
+        {
+            Destroy(tileCntrls[col, row].gameObject);
+        }
+
         tileCntrls[col, row] = tile.GetComponent<TileCntrl>(); 
 
         tileCntrls[col, row].Tile = tileSO;
 
         destroyOnInitialize.Add(tile);
+    }
+
+    private bool IsOffTheBoard(TilePosition position)
+    {
+        bool colOutOfRange = (position.Col >= gameData.boardSize) || (position.Col < 0);
+        bool rowOutOfRange = (position.Row >= gameData.boardSize) || (position.Row < 0);
+
+        return (colOutOfRange || rowOutOfRange);
     }
 
     public void PathTile(TilePosition position) =>
@@ -66,7 +106,4 @@ public class TileMngr : MonoBehaviour
 
     public bool IsTileOpen(TilePosition position) =>
         tileCntrls[position.Col, position.Row].Tile.IsTileOpen();
-
-    //public void SetTileAsVisted(TilePosition position) =>
-        //tileCntrls[position.Col, position.Row].SetTileAsVisted();
 }

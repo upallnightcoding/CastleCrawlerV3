@@ -24,7 +24,12 @@ public class TilePosition
         Row += step.Row * (direction ? 1 : -1);
     }
 
-    public bool IsValid()
+    public bool IsEqual(TilePosition tile)
+    {
+        return ((tile.Col == Col) && (tile.Row == Row));
+    }
+
+    public bool IsOnBoard()
     {
         bool colPos = (Col >= 0) && (Col < BoardCntrl.boardSize);
         bool rowPos = (Row >= 0) && (Row < BoardCntrl.boardSize);

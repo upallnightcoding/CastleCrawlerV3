@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46b1bab33f68a534b9e3be59f7e85f80, type: 3}
   m_Name: TileBlankSO
   m_EditorClassIdentifier: 
-  backGround: {fileID: 21300000, guid: 408725e150f43514ba82e73c97c60506, type: 3}
+  backGround: {fileID: 21300000, guid: 215d9dff07115427c805c2bc477a4e81, type: 3}
   image: {fileID: 0}
   prompt: 
   isTileOpen: 1
+  isTileInPlay: 1
+  isSupportProp: 1

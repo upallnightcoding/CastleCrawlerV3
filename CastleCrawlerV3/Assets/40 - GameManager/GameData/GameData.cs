@@ -26,7 +26,12 @@ public class GameData : ScriptableObject
     public TileSO tileCastleSO;
     public TileSO tileCrownSO;
     public TileSO tilePathSO;
+    public TileSO tileBombSO;
+    public TileSO tileShieldSO;
+    public TileSO tileHeartSO;
 
     [Header("Player Moves")]
     public string[] listOfMoves;
+
+    public Sprite[] dirBtnColor;
 }

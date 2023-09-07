@@ -8,9 +8,9 @@ public class BoardCntrl : MonoBehaviour
     [SerializeField] private GameObject tilePreFab;
     [SerializeField] private Transform parent;
     [SerializeField] private TileMngr tileMngr;
-    [SerializeField] private TileSO TileBlankSO;
-    [SerializeField] private TileSO TileCastleSO;
-    [SerializeField] private TileSO TileCrownSO;
+    //[SerializeField] private TileSO TileBlankSO;
+    //[SerializeField] private TileSO TileCastleSO;
+    //[SerializeField] private TileSO TileCrownSO;
 
     public static int boardSize = 0;
 
@@ -20,17 +20,17 @@ public class BoardCntrl : MonoBehaviour
 
     private Dictionary<string, Move> moveDictionary = null;
 
+    private Stack<string> moveStack;
+
     private bool SafeGuard(int count) => count < gameData.safeGuardLimit;
     private bool BuildingPath(int level) => level < gameData.level;
 
     public void Start()
     {
         Initialize();
-        
-        StartNewGame();
     }
 
-    public void Initialize()
+    private void Initialize()
     {
         boardSize = gameData.boardSize;
 
@@ -44,10 +44,20 @@ public class BoardCntrl : MonoBehaviour
         }
     }
 
-    public void StartNewGame()
+    public Stack<Move> StartNewGame()
     {
+        moveStack = new Stack<string>();
+
         DrawBoard();
-        CreateAPath();
+
+        Stack<Move> moves = CreateAPath();
+
+        PlaceTileOnBoard(gameData.tileShieldSO, 10);
+        PlaceTileOnBoard(gameData.tileBombSO, 10);
+        PlaceTileOnBoard(gameData.tileHeartSO, 10);
+
+        return (moves);
+        //return (null);
     }
 
     public void DrawBoard()
@@ -56,7 +66,74 @@ public class BoardCntrl : MonoBehaviour
         {
             for (int row = 0; row < boardSize; row++)
             {
-                tileMngr.CreateTile(new TilePosition(col, row), TileBlankSO);
+                tileMngr.CreateTile(new TilePosition(col, row), gameData.tileBlankSO);
+            }
+        }
+    }
+
+    public bool IsFinished()
+    {
+        return (currentPlayPos.IsEqual(finalPosition));
+    }
+
+    public bool OnPlayerMove(string moveName, Sprite color)
+    {
+        bool valid = true;
+        Stack<TilePosition> tracking = new Stack<TilePosition>();
+        TilePosition startingTile = new TilePosition(currentPlayPos);
+
+        for (int move = 0; (move < moveName.Length) && valid; move++)
+        {
+            switch (moveName.Substring(move, 1))
+            {
+                case "N":
+                    currentPlayPos.MoveToNextTile(GameData.NORTH_STEP);
+                    break;
+                case "S":
+                    currentPlayPos.MoveToNextTile(GameData.SOUTH_STEP);
+                    break;
+                case "E":
+                    currentPlayPos.MoveToNextTile(GameData.EAST_STEP);
+                    break;
+                case "W":
+                    currentPlayPos.MoveToNextTile(GameData.WEST_STEP);
+                    break;
+            }
+
+            valid = tileMngr.IsMoveValid(currentPlayPos);
+
+            if (valid)
+            {
+                tracking.Push(new TilePosition(currentPlayPos));
+            }
+        }
+
+        if (valid)
+        {
+            moveStack.Push(moveName);
+
+            foreach (TilePosition position in tracking)
+            {
+                tileMngr.Set(position, color);
+            }
+        }
+        else
+        {
+            currentPlayPos = new TilePosition(startingTile);
+        }
+
+        return (valid);
+    }
+
+    private void PlaceTileOnBoard(TileSO tile, int n)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            TilePosition position = SelectRandomPosition();
+
+            if (tileMngr.IsSupportProp(position))
+            {
+                tileMngr.CreateTile(position, tile);
             }
         }
     }
@@ -139,7 +216,7 @@ public class BoardCntrl : MonoBehaviour
     {
         TilePosition startPosition = SelectRandomPosition();
 
-        tileMngr.CreateTile(startPosition, TileCrownSO);
+        tileMngr.CreateTile(startPosition, gameData.tileCrownSO);
 
         return (startPosition);
     }

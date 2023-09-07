@@ -48,7 +48,7 @@ public class Move
         {
             nextTile.MoveToNextTile(move[i]);
 
-            valid = (nextTile.IsValid() && tileMgr.IsTileOpen(nextTile));
+            valid = (nextTile.IsOnBoard() && tileMgr.IsTileOpen(nextTile));
 
             if (valid)
             {
