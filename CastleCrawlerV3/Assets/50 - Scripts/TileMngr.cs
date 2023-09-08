@@ -12,12 +12,37 @@ public class TileMngr : MonoBehaviour
 
     private List<GameObject> destroyOnInitialize;
 
-    public void Start()
-    {
-        //destroyOnInitialize = new List<GameObject>();
-        //tileCntrls = new TileCntrl[gameData.boardSize, gameData.boardSize];
-    }
+    public void PathTile(TilePosition position) =>
+       tileCntrls[position.Col, position.Row].Tile = gameData.tilePathSO;
 
+    public void CrownTile(TilePosition position) =>
+        tileCntrls[position.Col, position.Row].Tile = gameData.tileCrownSO;
+
+    public void CastleTile(TilePosition position) =>
+        tileCntrls[position.Col, position.Row].Tile = gameData.tileCastleSO;
+
+    public void ResetTile(TilePosition position) =>
+        tileCntrls[position.Col, position.Row].Tile = gameData.tileBlankSO;
+
+    public bool IsTileOpen(TilePosition position) =>
+        tileCntrls[position.Col, position.Row].Tile.IsTileOpen();
+
+    public void Set(TilePosition position, GameObject tile, TileSO tileSO) =>
+        Set(position.Col, position.Row, tile, tileSO);
+
+    public void Set(TilePosition position, Sprite color) =>
+        tileCntrls[position.Col, position.Row].Set(color);
+
+    public void Undo(TilePosition position) =>
+        tileCntrls[position.Col, position.Row].Undo();
+
+    public bool IsSupportProp(TilePosition position) =>
+        tileCntrls[position.Col, position.Row].Tile.IsSupportProp();
+
+    /**
+     * Initialize() - Initial all attributes for the start of any game. Delete
+     * any tiles that exist to start over.
+     */
     public void Initialize()
     {
         destroyOnInitialize = new List<GameObject>();
@@ -36,21 +61,6 @@ public class TileMngr : MonoBehaviour
     {
         GameObject go = Instantiate(tilePreFab, position.GetTilePos(), Quaternion.identity, parent);
         Set(position, go, tileSO);
-    }
-
-    public void Set(TilePosition position, GameObject tile, TileSO tileSO)
-    {
-        Set(position.Col, position.Row, tile, tileSO);
-    }
-
-    public void Set(TilePosition position, Sprite color)
-    {
-        tileCntrls[position.Col, position.Row].Set(color);
-    }
-
-    public bool IsSupportProp(TilePosition position)
-    {
-        return (tileCntrls[position.Col, position.Row].Tile.IsSupportProp());
     }
 
     public bool IsMoveValid(TilePosition position)
@@ -91,19 +101,4 @@ public class TileMngr : MonoBehaviour
 
         return (colOutOfRange || rowOutOfRange);
     }
-
-    public void PathTile(TilePosition position) =>
-        tileCntrls[position.Col, position.Row].Tile = gameData.tilePathSO;
-
-    public void CrownTile(TilePosition position) =>
-        tileCntrls[position.Col, position.Row].Tile = gameData.tileCrownSO;
-
-    public void CastleTile(TilePosition position) =>
-        tileCntrls[position.Col, position.Row].Tile = gameData.tileCastleSO;
-
-    public void ResetTile(TilePosition position) =>
-        tileCntrls[position.Col, position.Row].Tile = gameData.tileBlankSO;
-
-    public bool IsTileOpen(TilePosition position) =>
-        tileCntrls[position.Col, position.Row].Tile.IsTileOpen();
 }

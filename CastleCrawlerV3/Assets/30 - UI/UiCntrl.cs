@@ -70,6 +70,11 @@ public class UiCntrl : MonoBehaviour
         }
     }
 
+    public void UndoPlayerMove(string moveName)
+    {
+        dirBtnDict[moveName].UndoPlayerMove();
+    }
+
     public bool IsDirBtnEnabled(string moveName)
     {
         return (dirBtnDict[moveName].IsDirBtnEnabled());

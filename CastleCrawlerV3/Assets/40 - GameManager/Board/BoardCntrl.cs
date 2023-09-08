@@ -44,6 +44,9 @@ public class BoardCntrl : MonoBehaviour
         }
     }
 
+    /**
+     * StartNewGame() - 
+     */
     public Stack<Move> StartNewGame()
     {
         moveStack = new Stack<string>();
@@ -57,25 +60,35 @@ public class BoardCntrl : MonoBehaviour
         PlaceTileOnBoard(gameData.tileHeartSO, 10);
 
         return (moves);
-        //return (null);
     }
 
+    /**
+     * DrawBoard() - Draw the initial board with all blanks tiles.
+     */
     public void DrawBoard()
     {
         for (int col = 0; col < boardSize; col++)
         {
             for (int row = 0; row < boardSize; row++)
             {
-                tileMngr.CreateTile(new TilePosition(col, row), gameData.tileBlankSO);
+                TilePosition position = new TilePosition(col, row);
+                tileMngr.CreateTile(position, gameData.tileBlankSO);
             }
         }
     }
 
+    /**
+     * IsFinished() - Returns true if the current player position is
+     * equal to the final position of the path.
+     */
     public bool IsFinished()
     {
         return (currentPlayPos.IsEqual(finalPosition));
     }
 
+    /**
+     * OnPlayerMove() - 
+     */
     public bool OnPlayerMove(string moveName, Sprite color)
     {
         bool valid = true;
@@ -125,6 +138,42 @@ public class BoardCntrl : MonoBehaviour
         return (valid);
     }
 
+    public string UndoPlayerMove()
+    {
+        string moveName = null;
+
+        if (moveStack.Count > 0)
+        {
+            moveName = moveStack.Pop();
+
+            for (int character = moveName.Length - 1; character >= 0; character--)
+            {
+                tileMngr.Undo(currentPlayPos);
+
+                switch (moveName.Substring(character, 1))
+                {
+                    case "N":
+                        currentPlayPos.MoveToNextTile(GameData.NORTH_STEP, false);
+                        break;
+                    case "S":
+                        currentPlayPos.MoveToNextTile(GameData.SOUTH_STEP, false);
+                        break;
+                    case "E":
+                        currentPlayPos.MoveToNextTile(GameData.EAST_STEP, false);
+                        break;
+                    case "W":
+                        currentPlayPos.MoveToNextTile(GameData.WEST_STEP, false);
+                        break;
+                }
+            }
+        }
+
+        return (moveName);
+    }
+
+    /**
+     * PlaceTileOnBoard
+     */
     private void PlaceTileOnBoard(TileSO tile, int n)
     {
         for (int i = 0; i < n; i++)
@@ -138,6 +187,9 @@ public class BoardCntrl : MonoBehaviour
         }
     }
 
+    /**
+     * CreateAPath() - 
+     */
     private Stack<Move> CreateAPath()
     {
         int level = 0;

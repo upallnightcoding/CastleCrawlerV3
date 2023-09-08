@@ -38,6 +38,16 @@ public class DirBtnCntrl : MonoBehaviour
         }
     }
 
+    public void UndoPlayerMove()
+    {
+        if (count == 0)
+        {
+            enabledBtn = true;
+        }
+
+        counterTxt.text = (++count).ToString();
+    }
+
     public void Initialize(string direction, int colorIndex, int count)
     {
         // Set the button text

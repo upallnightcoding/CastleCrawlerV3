@@ -11,9 +11,7 @@ public class TileCntrl : MonoBehaviour
     [SerializeField] private Image image;
     [SerializeField] private Image background;
 
-    //private TileState ressetTileState;
-    private Material resetMaterial;
-    private string resetText;
+    private Stack<Sprite> undoStack = new Stack<Sprite>();
 
     private TileBase tile;
 
@@ -52,33 +50,23 @@ public class TileCntrl : MonoBehaviour
     
     }
 
+    /**
+     * Set() - 
+     */
     public void Set(Sprite background)
     {
+        undoStack.Push(this.background.sprite);
         this.background.sprite = background;
     }
 
-    /*public void SetTileAsVisted()
+    /**
+     * Undo() - 
+     */
+    public void Undo()
     {
-        SetTile(TileState.VISITED, GameManagerCntrl.Instance.DisplayTileMaterial());
-    }
-
-    private void SetTile(TileState tileState, Material material)
-    {
-        SetTile(tileState, material, tileState.ToString());
-    }
-
-    private void SetTile(TileState tileState, Material material, string text)
-    {
-        ressetTileState = state;
-        resetMaterial = GetComponent<Renderer>().material;
-        resetText = tileLabel.text;
-
-        state = tileState;
-        GetComponent<Renderer>().material = material;
-
-        if (gameData.debugSw)
+        if (undoStack.Count > 0)
         {
-            tileLabel.text = text;
+            this.background.sprite = undoStack.Pop();
         }
-    }*/
+    }
 }

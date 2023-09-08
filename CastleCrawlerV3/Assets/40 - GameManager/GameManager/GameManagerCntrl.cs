@@ -52,4 +52,14 @@ public class GameManagerCntrl : MonoBehaviour
             }
         }
     }
+
+    public void OnUndoPlayerMove()
+    {
+        string moveName = boardCntrl.UndoPlayerMove();
+
+        if (moveName != null)
+        {
+            uiCntrl.UndoPlayerMove(moveName);
+        }
+    }
 }
