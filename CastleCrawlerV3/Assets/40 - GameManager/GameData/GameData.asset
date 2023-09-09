@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GameData
   m_EditorClassIdentifier: 
   safeGuardLimit: 500
-  level: 7
+  level: 2
   debugSw: 0
   boardSize: 10
   TileColorGray: {fileID: 2100000, guid: af4b74ce7239d4145aaf1a063a061ed7, type: 2}
