@@ -8,6 +8,7 @@ public class BoardCntrl : MonoBehaviour
     [SerializeField] private GameObject tilePreFab;
     [SerializeField] private Transform parent;
     [SerializeField] private TileMngr tileMngr;
+    [SerializeField] private GameObject FXExplosion;
     //[SerializeField] private TileSO TileBlankSO;
     //[SerializeField] private TileSO TileCastleSO;
     //[SerializeField] private TileSO TileCrownSO;
@@ -55,9 +56,9 @@ public class BoardCntrl : MonoBehaviour
 
         Stack<Move> moves = CreateAPath();
 
-        PlaceTileOnBoard(gameData.tileShieldSO, 10);
-        PlaceTileOnBoard(gameData.tileBombSO, 10);
-        PlaceTileOnBoard(gameData.tileHeartSO, 10);
+        //PlaceTileOnBoard(gameData.tileShieldSO, 10);
+        PlaceTileOnBoard(gameData.tileBombSO, 25);
+        //PlaceTileOnBoard(gameData.tileHeartSO, 10);
 
         return (moves);
     }
@@ -92,12 +93,12 @@ public class BoardCntrl : MonoBehaviour
     public bool OnPlayerMove(string moveName, Sprite color)
     {
         bool valid = true;
-        Stack<TilePosition> tracking = new Stack<TilePosition>();
+        List<TilePosition> tracking = new List<TilePosition>();
         TilePosition startingTile = new TilePosition(currentPlayPos);
 
-        for (int move = 0; (move < moveName.Length) && valid; move++)
+        for (int step = 0; (step < moveName.Length) && valid; step++)
         {
-            switch (moveName.Substring(move, 1))
+            switch (moveName.Substring(step, 1))
             {
                 case "N":
                     currentPlayPos.MoveToNextTile(GameData.NORTH_STEP);
@@ -115,27 +116,58 @@ public class BoardCntrl : MonoBehaviour
 
             valid = tileMngr.IsMoveValid(currentPlayPos);
 
-            if (valid)
-            {
-                tracking.Push(new TilePosition(currentPlayPos));
-            }
+            // Always track the last step of a move
+            tracking.Add(new TilePosition(currentPlayPos));
         }
 
         if (valid)
         {
             moveStack.Push(moveName);
 
-            foreach (TilePosition position in tracking)
-            {
-                tileMngr.Set(position, color);
-            }
+            StartCoroutine(LaydownTiles(tracking, color));
         }
         else
         {
             currentPlayPos = new TilePosition(startingTile);
+
+            StartCoroutine(LaydownInValidTiles(tracking, color));
         }
 
         return (valid);
+    }
+
+    private IEnumerator LaydownTiles(List<TilePosition> tracking, Sprite color)
+    {
+        foreach (TilePosition position in tracking)
+        {
+            tileMngr.Set(position, color);
+            yield return new WaitForSeconds(0.75f);
+        }
+    }
+
+    private IEnumerator LaydownInValidTiles(List<TilePosition> tracking, Sprite color)
+    {
+        int count = tracking.Count;
+        TilePosition position = null;
+
+        for (int i = 0; i < count; i++)
+        {
+            position = tracking[i];
+            tileMngr.Set(position, color);
+
+            yield return new WaitForSeconds((i < count-1) ? 0.75f : 0.1f);
+        }
+
+        Instantiate(FXExplosion, position.GetTilePos(), Quaternion.identity, parent);
+
+        //tileMngr.Set(position)
+
+        foreach (TilePosition resetPosition in tracking)
+        {
+            tileMngr.Undo(resetPosition);
+        }
+
+        tileMngr.ShowImage(position);
     }
 
     public string UndoPlayerMove()

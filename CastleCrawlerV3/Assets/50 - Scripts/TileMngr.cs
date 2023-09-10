@@ -22,7 +22,10 @@ public class TileMngr : MonoBehaviour
         tileCntrls[position.Col, position.Row].Tile = gameData.tileCastleSO;
 
     public void ResetTile(TilePosition position) =>
-        tileCntrls[position.Col, position.Row].Tile = gameData.tileBlankSO;
+        tileCntrls[position.Col, position.Row].ResetTile();
+
+    public void ShowImage(TilePosition position) =>
+        tileCntrls[position.Col, position.Row].ShowImage();
 
     public bool IsTileOpen(TilePosition position) =>
         tileCntrls[position.Col, position.Row].Tile.IsTileOpen();

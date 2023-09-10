@@ -1,24 +1,74 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 public class UiCntrl : MonoBehaviour
 {
     [SerializeField] private Transform dirBtnContainer;
     [SerializeField] private GameObject dirBtnPreFab;
+    [SerializeField] private TMP_Text level;
+    [SerializeField] private GameData gameData;
+    [SerializeField] private Image star1On;
+    [SerializeField] private Image star2On;
+    [SerializeField] private Image star3On;
+    [SerializeField] private TMP_Text heartsCnt;
 
     private Dictionary<string, DirBtnCntrl> dirBtnDict;
 
     private List<GameObject> listOfDirBtns = null;
 
+    private int starCounter = 0;
+
+    private int health = 3;
+
     private void Start()
     {
         listOfDirBtns = new List<GameObject>();
+        level.text = gameData.level.ToString();
     }
 
+    /**
+     * OnPlayerMove() - When the player selects a move update the move
+     * counter that is assoicated with the button.
+     */
     public void OnPlayerMove(string moveName)
     {
-        dirBtnDict[moveName].OnDirectionClick();
+        dirBtnDict[moveName].UpdateMoveCounter();
+    }
+
+    public void UpdateHealth(int hearts)
+    {
+        health += hearts;
+
+        heartsCnt.text = "x" + health.ToString();
+    }
+
+    /**
+     * UpdateGameLevel() - 
+     */
+    public void UpdateGameLevel()
+    {
+        switch(++starCounter)
+        {
+            case 1:
+                star1On.gameObject.SetActive(true);
+                break;
+            case 2:
+                star2On.gameObject.SetActive(true);
+                break;
+            case 3:
+                star3On.gameObject.SetActive(true);
+                break;
+            case 4:
+                star1On.gameObject.SetActive(false);
+                star2On.gameObject.SetActive(false);
+                star3On.gameObject.SetActive(false);
+                level.text = (++gameData.level).ToString();
+                starCounter = 0;
+                break;
+        }
     }
 
     public bool TotalPointsIsZero()

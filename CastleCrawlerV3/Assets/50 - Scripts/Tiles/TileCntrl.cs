@@ -11,9 +11,14 @@ public class TileCntrl : MonoBehaviour
     [SerializeField] private Image image;
     [SerializeField] private Image background;
 
-    private Stack<Sprite> undoStack = new Stack<Sprite>();
+    private Stack<Sprite> undoBGStack = new Stack<Sprite>();
+    private Stack<string> undoTextStack = new Stack<string>();
 
     private TileBase tile;
+
+    private bool isShowingImage = false;
+
+    private string resetText;
 
     public TileBase Tile 
     {
@@ -29,34 +34,55 @@ public class TileCntrl : MonoBehaviour
             if (gameData.debugSw)
             {
                 prompt.text = tile.GetPrompt();
-                background.gameObject.SetActive(false);
-            }
-            else
-            {
-                background.gameObject.SetActive(true);
-                background.sprite = tile.GetBackGround();
             }
 
-            if (tile.GetSprite() != null)
+            isShowingImage = tile.IsShowing();
+
+            background.gameObject.SetActive(true);
+            background.sprite = tile.GetBackGround();
+
+            if (tile.GetForeGroundImage() != null)
             {
-                image.gameObject.SetActive(true);
-                image.sprite = tile.GetSprite();
+                if (isShowingImage)
+                {
+                    image.gameObject.SetActive(true);
+                    image.sprite = tile.GetForeGroundImage();
+                }
             } 
             else
             {
                 image.gameObject.SetActive(false);
             }
+
+            resetText = prompt.text;
         } 
     
+    }
+
+    public void ResetTile()
+    {
+        prompt.text = resetText;
+    }
+
+    public void ShowImage()
+    {
+        isShowingImage = true;
     }
 
     /**
      * Set() - 
      */
-    public void Set(Sprite background)
+    public void Set(Sprite newBackGroundSprite)
     {
-        undoStack.Push(this.background.sprite);
-        this.background.sprite = background;
+        undoBGStack.Push(this.background.sprite);
+        undoTextStack.Push(prompt.text);
+
+        background.sprite = newBackGroundSprite;
+    }
+
+    public void FxAnimate()
+    {
+
     }
 
     /**
@@ -64,9 +90,10 @@ public class TileCntrl : MonoBehaviour
      */
     public void Undo()
     {
-        if (undoStack.Count > 0)
+        if (undoBGStack.Count > 0)
         {
-            this.background.sprite = undoStack.Pop();
+            this.background.sprite = undoBGStack.Pop();
+            this.prompt.text = undoTextStack.Pop();
         }
     }
 }

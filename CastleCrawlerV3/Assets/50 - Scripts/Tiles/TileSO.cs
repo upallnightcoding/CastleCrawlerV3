@@ -11,16 +11,23 @@ public class TileSO : ScriptableObject, TileBase
     public bool isTileOpen;
     public bool isTileInPlay;
     public bool isSupportProp;
+    public GameObject animation;
+    public bool isShowing;
 
     public virtual Sprite GetBackGround() => backGround;
 
     public virtual string GetPrompt() => prompt;
 
-    public virtual Sprite GetSprite() => image;
+    public virtual Sprite GetForeGroundImage() => image;
 
     public virtual bool IsTileOpen() => isTileOpen;
 
     public virtual bool IsTileInPlay() => isTileInPlay;
 
     public virtual bool IsSupportProp() => isSupportProp;
+
+    public virtual bool IsShowing() => isShowing;
+
+    public void Animate(TilePosition position) =>
+        Object.Instantiate(animation, position.GetTilePos(), Quaternion.identity);
 }

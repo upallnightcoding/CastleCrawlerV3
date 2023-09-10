@@ -30,6 +30,9 @@ public class GameData : ScriptableObject
     public TileSO tileShieldSO;
     public TileSO tileHeartSO;
 
+    [Header("Animation")]
+    public GameObject FxTileAnimation;
+
     [Header("Player Moves")]
     public string[] listOfMoves;
 

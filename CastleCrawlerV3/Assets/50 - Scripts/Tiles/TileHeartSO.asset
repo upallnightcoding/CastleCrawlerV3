@@ -18,3 +18,5 @@ MonoBehaviour:
   isTileOpen: 0
   isTileInPlay: 0
   isSupportProp: 0
+  animation: {fileID: 0}
+  isShowing: 0

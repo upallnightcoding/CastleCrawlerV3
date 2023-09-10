@@ -17,3 +17,6 @@ MonoBehaviour:
   prompt: Bomb
   isTileOpen: 0
   isTileInPlay: 0
+  isSupportProp: 0
+  animation: {fileID: 3060691191402842996, guid: 5b48cc8044e90b845af64b9af0d722c6, type: 3}
+  isShowing: 0

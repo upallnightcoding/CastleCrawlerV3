@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: GameData
   m_EditorClassIdentifier: 
   safeGuardLimit: 500
-  level: 2
-  debugSw: 0
+  level: 7
+  debugSw: 1
   boardSize: 10
   TileColorGray: {fileID: 2100000, guid: af4b74ce7239d4145aaf1a063a061ed7, type: 2}
   TileColorWhite: {fileID: 2100000, guid: 8278ffac5ce738141a010cff930db53d, type: 2}
@@ -25,6 +25,7 @@ MonoBehaviour:
   tileBombSO: {fileID: 11400000, guid: 64e1f3031d006ec49a84d46f9338277f, type: 2}
   tileShieldSO: {fileID: 11400000, guid: e2b002a914aa8a44f9cc4521f3bfc0bf, type: 2}
   tileHeartSO: {fileID: 11400000, guid: c1dfced676413cf42baf1d0ce4fc2b40, type: 2}
+  FxTileAnimation: {fileID: 0}
   listOfMoves:
   - N
   - S

@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46b1bab33f68a534b9e3be59f7e85f80, type: 3}
   m_Name: TilePathSO
   m_EditorClassIdentifier: 
-  backGround: {fileID: 21300000, guid: 7c9169de7543a47c7a1a49f13864a321, type: 3}
+  backGround: {fileID: 21300000, guid: 8c135524ae0d06740801e6b049c6f9f0, type: 3}
   image: {fileID: 0}
   prompt: Path
   isTileOpen: 0
   isTileInPlay: 1
+  isSupportProp: 0
+  animation: {fileID: 0}
+  isShowing: 0

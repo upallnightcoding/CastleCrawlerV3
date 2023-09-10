@@ -25,7 +25,7 @@ public class DirBtnCntrl : MonoBehaviour
         GameManagerCntrl.Instance.OnPlayerMove(moveTxt.text, gameData.dirBtnColor[colorIndex]);
     }
 
-    public void OnDirectionClick()
+    public void UpdateMoveCounter()
     {
         if (enabledBtn)
         {

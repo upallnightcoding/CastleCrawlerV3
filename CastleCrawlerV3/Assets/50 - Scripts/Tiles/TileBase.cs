@@ -6,7 +6,7 @@ public interface TileBase
 {
     public Sprite GetBackGround();
 
-    public Sprite GetSprite();
+    public Sprite GetForeGroundImage();
 
     public string GetPrompt();
 
@@ -15,4 +15,8 @@ public interface TileBase
     public bool IsTileInPlay();
 
     public bool IsSupportProp();
+
+    public void Animate(TilePosition position);
+
+    public bool IsShowing();
 }
