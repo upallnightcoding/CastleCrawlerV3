@@ -22,10 +22,10 @@ public class GameManagerCntrl : MonoBehaviour
         }
     }
 
-    /*public void StartNewGame()
+    public void DisplayIllegalMoveBanner()
     {
-        boardCntrl.StartNewGame();
-    }*/
+        uiCntrl.DisplayIllegalMoveBanner();
+    }
 
     public void OnStartNewGame()
     {

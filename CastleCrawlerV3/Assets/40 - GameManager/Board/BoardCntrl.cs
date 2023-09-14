@@ -57,8 +57,8 @@ public class BoardCntrl : MonoBehaviour
         Stack<Move> moves = CreateAPath();
 
         //PlaceTileOnBoard(gameData.tileShieldSO, 10);
-        PlaceTileOnBoard(gameData.tileBombSO, 25);
-        //PlaceTileOnBoard(gameData.tileHeartSO, 10);
+        //PlaceTileOnBoard(gameData.tileBombSO, 25);
+        PlaceTileOnBoard(gameData.tileHeartSO, 10);
 
         return (moves);
     }
@@ -87,12 +87,15 @@ public class BoardCntrl : MonoBehaviour
         return (currentPlayPos.IsEqual(finalPosition));
     }
 
+    #region PlayerMove
+
     /**
      * OnPlayerMove() - 
      */
     public bool OnPlayerMove(string moveName, Sprite color)
     {
         bool valid = true;
+        StepValidType isStepValid = StepValidType.VALID;
         List<TilePosition> tracking = new List<TilePosition>();
         TilePosition startingTile = new TilePosition(currentPlayPos);
 
@@ -114,23 +117,41 @@ public class BoardCntrl : MonoBehaviour
                     break;
             }
 
-            valid = tileMngr.IsMoveValid(currentPlayPos);
+            isStepValid = tileMngr.IsStepValid(currentPlayPos);
 
-            // Always track the last step of a move
-            tracking.Add(new TilePosition(currentPlayPos));
+            if (isStepValid == StepValidType.OFF_BOARD)
+            {
+                if (tracking.Count == 0)
+                {
+                    currentPlayPos = new TilePosition(startingTile);
+                } else
+                {
+                    currentPlayPos = new TilePosition(tracking[tracking.Count - 1]);
+                }
+            } 
+            else
+            {
+                tracking.Add(new TilePosition(currentPlayPos));
+            }
+
+            valid = (isStepValid == StepValidType.VALID); 
         }
 
-        if (valid)
+        switch(isStepValid)
         {
-            moveStack.Push(moveName);
-
-            StartCoroutine(LaydownTiles(tracking, color));
-        }
-        else
-        {
-            currentPlayPos = new TilePosition(startingTile);
-
-            StartCoroutine(LaydownInValidTiles(tracking, color));
+            case StepValidType.VALID:
+                moveStack.Push(moveName);
+                StartCoroutine(LaydownTiles(tracking, color));
+                break;
+            case StepValidType.INVALID:
+                currentPlayPos = new TilePosition(startingTile);
+                StartCoroutine(LaydownInValidTiles(tracking, color));
+                break;
+            case StepValidType.OFF_BOARD:
+                GameManagerCntrl.Instance.DisplayIllegalMoveBanner();
+                StartCoroutine(LaydownInValidTiles(tracking, color));
+                currentPlayPos = new TilePosition(startingTile);
+                break;
         }
 
         return (valid);
@@ -155,20 +176,23 @@ public class BoardCntrl : MonoBehaviour
             position = tracking[i];
             tileMngr.Set(position, color);
 
-            yield return new WaitForSeconds((i < count-1) ? 0.75f : 0.1f);
+            yield return new WaitForSeconds((i < count - 1) ? 0.75f : 0.1f);
         }
 
-        Instantiate(FXExplosion, position.GetTilePos(), Quaternion.identity, parent);
-
-        //tileMngr.Set(position)
-
-        foreach (TilePosition resetPosition in tracking)
+        if (position != null)
         {
-            tileMngr.Undo(resetPosition);
-        }
+            tileMngr.Animate(position);
 
-        tileMngr.ShowImage(position);
+            foreach (TilePosition resetPosition in tracking)
+            {
+                tileMngr.Undo(resetPosition);
+            }
+
+            tileMngr.ShowImage(position);
+        }
     }
+
+    #endregion
 
     public string UndoPlayerMove()
     {
@@ -298,7 +322,8 @@ public class BoardCntrl : MonoBehaviour
 
     private TilePosition SelectStartingPoint()
     {
-        TilePosition startPosition = SelectRandomPosition();
+        //TilePosition startPosition = SelectRandomPosition();
+        TilePosition startPosition = new TilePosition(1, 1);
 
         tileMngr.CreateTile(startPosition, gameData.tileCrownSO);
 

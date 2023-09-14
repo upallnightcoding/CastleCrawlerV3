@@ -66,7 +66,11 @@ public class TileCntrl : MonoBehaviour
 
     public void ShowImage()
     {
-        isShowingImage = true;
+        if (tile.GetForeGroundImage() != null)
+        {
+            image.gameObject.SetActive(true);
+            image.sprite = tile.GetForeGroundImage();
+        }
     }
 
     /**
@@ -80,9 +84,10 @@ public class TileCntrl : MonoBehaviour
         background.sprite = newBackGroundSprite;
     }
 
-    public void FxAnimate()
+    public void Animate(TilePosition position)
     {
-
+        GameObject go = tile.Animate(position);
+        //Destroy(go, 2.0f);
     }
 
     /**

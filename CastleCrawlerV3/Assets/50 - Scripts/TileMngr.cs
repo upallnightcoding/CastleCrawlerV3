@@ -30,6 +30,9 @@ public class TileMngr : MonoBehaviour
     public bool IsTileOpen(TilePosition position) =>
         tileCntrls[position.Col, position.Row].Tile.IsTileOpen();
 
+    public void Animate(TilePosition position) =>
+        tileCntrls[position.Col, position.Row].Animate(position);
+
     public void Set(TilePosition position, GameObject tile, TileSO tileSO) =>
         Set(position.Col, position.Row, tile, tileSO);
 
@@ -66,21 +69,22 @@ public class TileMngr : MonoBehaviour
         Set(position, go, tileSO);
     }
 
-    public bool IsMoveValid(TilePosition position)
+    public StepValidType IsStepValid(TilePosition position)
     {
         bool offTheBoard = IsOffTheBoard(position);
-        bool tileIsOpen = false;
+        StepValidType valid = StepValidType.VALID;
 
         if (offTheBoard)
         {
-            //GameManagerCntrl.Instance.DisplayIllegalMoveBanner();
+            valid = StepValidType.OFF_BOARD;
         }
         else
         {
-            tileIsOpen = tileCntrls[position.Col, position.Row].Tile.IsTileInPlay();
+            bool tileIsOpen = tileCntrls[position.Col, position.Row].Tile.IsTileInPlay();
+            valid = (tileIsOpen) ? StepValidType.VALID : StepValidType.INVALID;
         }
 
-        return (!offTheBoard && tileIsOpen);
+        return (valid);
     }
 
     private void Set(int col, int row, GameObject tile, TileSO tileSO)
@@ -104,4 +108,11 @@ public class TileMngr : MonoBehaviour
 
         return (colOutOfRange || rowOutOfRange);
     }
+}
+
+public enum StepValidType
+{
+    VALID,
+    INVALID,
+    OFF_BOARD
 }

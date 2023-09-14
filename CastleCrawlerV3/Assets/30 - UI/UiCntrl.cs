@@ -10,10 +10,14 @@ public class UiCntrl : MonoBehaviour
     [SerializeField] private GameObject dirBtnPreFab;
     [SerializeField] private TMP_Text level;
     [SerializeField] private GameData gameData;
+    [SerializeField] private TMP_Text heartsCnt;
     [SerializeField] private Image star1On;
     [SerializeField] private Image star2On;
     [SerializeField] private Image star3On;
-    [SerializeField] private TMP_Text heartsCnt;
+    [SerializeField] private GameObject nextLevelBanner;
+    [SerializeField] private GameObject winBanner;
+    [SerializeField] private GameObject looseBanner;
+    [SerializeField] private GameObject illegalMoveBanner;
 
     private Dictionary<string, DirBtnCntrl> dirBtnDict;
 
@@ -27,6 +31,18 @@ public class UiCntrl : MonoBehaviour
     {
         listOfDirBtns = new List<GameObject>();
         level.text = gameData.level.ToString();
+    }
+
+    public void DisplayIllegalMoveBanner()
+    {
+        StartCoroutine(DisplayBanner(illegalMoveBanner));
+    }
+
+    IEnumerator DisplayBanner(GameObject banner)
+    {
+        banner.gameObject.SetActive(true);
+        yield return new WaitForSeconds(3.0f);
+        banner.gameObject.SetActive(false);
     }
 
     /**

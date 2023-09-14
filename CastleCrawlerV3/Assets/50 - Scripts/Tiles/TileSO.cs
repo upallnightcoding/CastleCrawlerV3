@@ -28,6 +28,19 @@ public class TileSO : ScriptableObject, TileBase
 
     public virtual bool IsShowing() => isShowing;
 
-    public void Animate(TilePosition position) =>
-        Object.Instantiate(animation, position.GetTilePos(), Quaternion.identity);
+    public GameObject Animate(TilePosition position)
+    {
+        GameObject go = null;
+
+        if (animation != null)
+        {
+            go = Object.Instantiate(
+                animation,
+                position.GetTilePos() + new Vector3(0.0f, 0.02f, 0.0f),
+                Quaternion.identity
+            );
+        }
+
+        return (go);
+    }
 }

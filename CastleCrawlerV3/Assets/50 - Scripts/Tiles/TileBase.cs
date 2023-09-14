@@ -16,7 +16,7 @@ public interface TileBase
 
     public bool IsSupportProp();
 
-    public void Animate(TilePosition position);
+    public GameObject Animate(TilePosition position);
 
     public bool IsShowing();
 }
