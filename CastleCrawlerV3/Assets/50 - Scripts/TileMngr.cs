@@ -69,22 +69,26 @@ public class TileMngr : MonoBehaviour
         Set(position, go, tileSO);
     }
 
+    /**
+     * IsStepValid() - 
+     */
     public StepValidType IsStepValid(TilePosition position)
     {
         bool offTheBoard = IsOffTheBoard(position);
-        StepValidType valid = StepValidType.VALID;
+        StepValidType valid = StepValidType.OFF_BOARD;
 
-        if (offTheBoard)
+        if (!offTheBoard)
         {
-            valid = StepValidType.OFF_BOARD;
-        }
-        else
-        {
-            bool tileIsOpen = tileCntrls[position.Col, position.Row].Tile.IsTileInPlay();
-            valid = (tileIsOpen) ? StepValidType.VALID : StepValidType.INVALID;
+            bool tileIsBlocked = tileCntrls[position.Col, position.Row].Tile.IsTileBlocked();
+            valid = (tileIsBlocked) ? StepValidType.BLOCKED : StepValidType.OPEN;
         }
 
         return (valid);
+    }
+
+    public void BlockedTile(TilePosition position)
+    {
+        StartCoroutine(tileCntrls[position.Col, position.Row].Tile.BlockedTile(position));
     }
 
     private void Set(int col, int row, GameObject tile, TileSO tileSO)
@@ -112,7 +116,7 @@ public class TileMngr : MonoBehaviour
 
 public enum StepValidType
 {
-    VALID,
-    INVALID,
+    OPEN,
+    BLOCKED,
     OFF_BOARD
 }

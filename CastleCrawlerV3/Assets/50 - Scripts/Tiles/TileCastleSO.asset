@@ -16,7 +16,7 @@ MonoBehaviour:
   image: {fileID: 21300000, guid: 89db5ba724909ef4e901d45787cf56ae, type: 3}
   prompt: Finished
   isTileOpen: 0
-  isTileInPlay: 1
+  isTileBlocked: 1
   isSupportProp: 0
   animation: {fileID: 0}
   isShowing: 1

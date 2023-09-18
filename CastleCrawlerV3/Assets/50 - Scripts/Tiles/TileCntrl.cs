@@ -86,7 +86,7 @@ public class TileCntrl : MonoBehaviour
 
     public void Animate(TilePosition position)
     {
-        GameObject go = tile.Animate(position);
+        //GameObject go = tile.BlockedTile(position);
         //Destroy(go, 2.0f);
     }
 

@@ -12,11 +12,11 @@ public interface TileBase
 
     public bool IsTileOpen();
 
-    public bool IsTileInPlay();
+    public bool IsTileBlocked();
 
     public bool IsSupportProp();
 
-    public GameObject Animate(TilePosition position);
+    public IEnumerator BlockedTile(TilePosition position);
 
     public bool IsShowing();
 }

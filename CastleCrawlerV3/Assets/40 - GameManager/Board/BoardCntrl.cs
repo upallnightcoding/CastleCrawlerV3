@@ -9,9 +9,6 @@ public class BoardCntrl : MonoBehaviour
     [SerializeField] private Transform parent;
     [SerializeField] private TileMngr tileMngr;
     [SerializeField] private GameObject FXExplosion;
-    //[SerializeField] private TileSO TileBlankSO;
-    //[SerializeField] private TileSO TileCastleSO;
-    //[SerializeField] private TileSO TileCrownSO;
 
     public static int boardSize = 0;
 
@@ -94,12 +91,12 @@ public class BoardCntrl : MonoBehaviour
      */
     public bool OnPlayerMove(string moveName, Sprite color)
     {
-        bool valid = true;
-        StepValidType isStepValid = StepValidType.VALID;
+        bool continueMove = true;
+        StepValidType isStepValid = StepValidType.OPEN;
         List<TilePosition> tracking = new List<TilePosition>();
         TilePosition startingTile = new TilePosition(currentPlayPos);
 
-        for (int step = 0; (step < moveName.Length) && valid; step++)
+        for (int step = 0; (step < moveName.Length) && continueMove; step++)
         {
             switch (moveName.Substring(step, 1))
             {
@@ -119,7 +116,23 @@ public class BoardCntrl : MonoBehaviour
 
             isStepValid = tileMngr.IsStepValid(currentPlayPos);
 
-            if (isStepValid == StepValidType.OFF_BOARD)
+            switch(isStepValid)
+            {
+                case StepValidType.OPEN:
+                    tracking.Add(new TilePosition(currentPlayPos));
+                    tileMngr.Set(currentPlayPos, color);
+                    break;
+                case StepValidType.BLOCKED:
+                    tileMngr.BlockedTile(currentPlayPos);
+                    tileMngr.Set(currentPlayPos, color);
+                    break;
+                case StepValidType.OFF_BOARD:
+                    TileOffBoard(startingTile, tracking);
+                    break;
+            }
+
+            /*
+             * if (isStepValid == StepValidType.OFF_BOARD)
             {
                 if (tracking.Count == 0)
                 {
@@ -133,17 +146,18 @@ public class BoardCntrl : MonoBehaviour
             {
                 tracking.Add(new TilePosition(currentPlayPos));
             }
+            */
 
-            valid = (isStepValid == StepValidType.VALID); 
+            //valid = (isStepValid == StepValidType.OPEN); 
         }
 
-        switch(isStepValid)
+        /*switch(isStepValid)
         {
             case StepValidType.VALID:
                 moveStack.Push(moveName);
                 StartCoroutine(LaydownTiles(tracking, color));
                 break;
-            case StepValidType.INVALID:
+            case StepValidType.BLOCKED:
                 currentPlayPos = new TilePosition(startingTile);
                 StartCoroutine(LaydownInValidTiles(tracking, color));
                 break;
@@ -152,9 +166,25 @@ public class BoardCntrl : MonoBehaviour
                 StartCoroutine(LaydownInValidTiles(tracking, color));
                 currentPlayPos = new TilePosition(startingTile);
                 break;
+        }*/
+
+        return (continueMove);
+    }
+
+    private TilePosition TileOffBoard(TilePosition startingTile, List<TilePosition> tracking)
+    {
+        TilePosition currentPlayPos;
+
+        if (tracking.Count == 0)
+        {
+            currentPlayPos = new TilePosition(startingTile);
+        }
+        else
+        {
+            currentPlayPos = new TilePosition(tracking[tracking.Count - 1]);
         }
 
-        return (valid);
+        return (currentPlayPos);
     }
 
     private IEnumerator LaydownTiles(List<TilePosition> tracking, Sprite color)

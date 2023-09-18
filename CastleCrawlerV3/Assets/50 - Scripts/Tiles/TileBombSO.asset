@@ -16,7 +16,7 @@ MonoBehaviour:
   image: {fileID: 21300000, guid: 65bbb4201685d714ebaa7755118f518b, type: 3}
   prompt: Bomb
   isTileOpen: 0
-  isTileInPlay: 0
+  isTileBlocked: 1
   isSupportProp: 0
   animation: {fileID: 3060691191402842996, guid: 5b48cc8044e90b845af64b9af0d722c6, type: 3}
   isShowing: 0
