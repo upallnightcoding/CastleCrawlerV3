@@ -12,7 +12,7 @@ public interface TileBase
 
     public bool IsTileOpen();
 
-    public bool IsTileBlocked();
+    public StepValidType IsTileBlocked();
 
     public bool IsSupportProp();
 

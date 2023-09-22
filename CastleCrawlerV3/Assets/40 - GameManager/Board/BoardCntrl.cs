@@ -20,6 +20,8 @@ public class BoardCntrl : MonoBehaviour
 
     private Stack<string> moveStack;
 
+    private bool completedMove = false;
+
     private bool SafeGuard(int count) => count < gameData.safeGuardLimit;
     private bool BuildingPath(int level) => level < gameData.level;
 
@@ -53,9 +55,9 @@ public class BoardCntrl : MonoBehaviour
 
         Stack<Move> moves = CreateAPath();
 
-        //PlaceTileOnBoard(gameData.tileShieldSO, 10);
-        //PlaceTileOnBoard(gameData.tileBombSO, 25);
-        PlaceTileOnBoard(gameData.tileHeartSO, 10);
+        //PlaceTileOnBoard(gameData.tileShieldSO, 20);
+        PlaceTileOnBoard(gameData.tileBombSO, 25);
+        //PlaceTileOnBoard(gameData.tileHeartSO, 10);
 
         return (moves);
     }
@@ -86,92 +88,96 @@ public class BoardCntrl : MonoBehaviour
 
     #region PlayerMove
 
+    public bool OnPlayerMove(string moveName, Sprite color)
+    {
+        StartCoroutine(OnPlayerMoveCR(moveName, color));
+
+        return(completedMove);
+    }
+
     /**
      * OnPlayerMove() - 
      */
-    public bool OnPlayerMove(string moveName, Sprite color)
+    public IEnumerator OnPlayerMoveCR(string moveName, Sprite color)
     {
-        bool continueMove = true;
+        completedMove = true;
         StepValidType isStepValid = StepValidType.OPEN;
         List<TilePosition> tracking = new List<TilePosition>();
         TilePosition startingTile = new TilePosition(currentPlayPos);
 
-        for (int step = 0; (step < moveName.Length) && continueMove; step++)
+        for (int step = 0; (step < moveName.Length) && completedMove; step++)
         {
-            switch (moveName.Substring(step, 1))
-            {
-                case "N":
-                    currentPlayPos.MoveToNextTile(GameData.NORTH_STEP);
-                    break;
-                case "S":
-                    currentPlayPos.MoveToNextTile(GameData.SOUTH_STEP);
-                    break;
-                case "E":
-                    currentPlayPos.MoveToNextTile(GameData.EAST_STEP);
-                    break;
-                case "W":
-                    currentPlayPos.MoveToNextTile(GameData.WEST_STEP);
-                    break;
-            }
+            MoveToNextTile(moveName, step);
 
             isStepValid = tileMngr.IsStepValid(currentPlayPos);
 
-            switch(isStepValid)
-            {
-                case StepValidType.OPEN:
-                    tracking.Add(new TilePosition(currentPlayPos));
-                    tileMngr.Set(currentPlayPos, color);
-                    break;
-                case StepValidType.BLOCKED:
-                    tileMngr.BlockedTile(currentPlayPos);
-                    tileMngr.Set(currentPlayPos, color);
-                    break;
-                case StepValidType.OFF_BOARD:
-                    TileOffBoard(startingTile, tracking);
-                    break;
-            }
+            completedMove = CheckStepValid(isStepValid, color, startingTile, tracking);
 
-            /*
-             * if (isStepValid == StepValidType.OFF_BOARD)
-            {
-                if (tracking.Count == 0)
-                {
-                    currentPlayPos = new TilePosition(startingTile);
-                } else
-                {
-                    currentPlayPos = new TilePosition(tracking[tracking.Count - 1]);
-                }
-            } 
-            else
-            {
-                tracking.Add(new TilePosition(currentPlayPos));
-            }
-            */
-
-            //valid = (isStepValid == StepValidType.OPEN); 
+            yield return new WaitForSeconds(0.75f);
         }
 
-        /*switch(isStepValid)
+        if(completedMove)
         {
-            case StepValidType.VALID:
-                moveStack.Push(moveName);
-                StartCoroutine(LaydownTiles(tracking, color));
-                break;
-            case StepValidType.BLOCKED:
-                currentPlayPos = new TilePosition(startingTile);
-                StartCoroutine(LaydownInValidTiles(tracking, color));
-                break;
-            case StepValidType.OFF_BOARD:
-                GameManagerCntrl.Instance.DisplayIllegalMoveBanner();
-                StartCoroutine(LaydownInValidTiles(tracking, color));
-                currentPlayPos = new TilePosition(startingTile);
-                break;
-        }*/
-
-        return (continueMove);
+            moveStack.Push(moveName);
+        }
     }
 
-    private TilePosition TileOffBoard(TilePosition startingTile, List<TilePosition> tracking)
+    private bool CheckStepValid(
+        StepValidType isStepValid,
+        Sprite color,
+        TilePosition startingTile,
+        List<TilePosition> tracking
+     )
+    {
+        bool completedMove = false;
+
+        switch (isStepValid)
+        {
+            case StepValidType.OPEN:
+                completedMove = true;
+                tracking.Add(new TilePosition(currentPlayPos));
+                tileMngr.Set(currentPlayPos, color);
+                break;
+            case StepValidType.PASS_THROUGH:
+                completedMove = true;
+                tileMngr.BlockedTile(currentPlayPos);
+                tileMngr.Set(currentPlayPos, color);
+                break;
+            case StepValidType.OFF_BOARD:
+            case StepValidType.BLOCKED:
+                completedMove = false;
+                ResetStartingPoint(startingTile, tracking);
+                currentPlayPos = new TilePosition(startingTile);
+                foreach (TilePosition resetPosition in tracking)
+                {
+                    tileMngr.Undo(resetPosition);
+                }
+                break;
+        }
+
+        return (completedMove);
+    }
+
+    private void MoveToNextTile(string moveName, int step)
+    {
+        switch (moveName.Substring(step, 1))
+        {
+            case "N":
+                currentPlayPos.MoveToNextTile(GameData.NORTH_STEP);
+                break;
+            case "S":
+                currentPlayPos.MoveToNextTile(GameData.SOUTH_STEP);
+                break;
+            case "E":
+                currentPlayPos.MoveToNextTile(GameData.EAST_STEP);
+                break;
+            case "W":
+                currentPlayPos.MoveToNextTile(GameData.WEST_STEP);
+                break;
+        }
+    }
+
+    private TilePosition ResetStartingPoint(TilePosition startingTile, List<TilePosition> tracking)
     {
         TilePosition currentPlayPos;
 
@@ -352,8 +358,8 @@ public class BoardCntrl : MonoBehaviour
 
     private TilePosition SelectStartingPoint()
     {
-        //TilePosition startPosition = SelectRandomPosition();
-        TilePosition startPosition = new TilePosition(1, 1);
+        TilePosition startPosition = SelectRandomPosition();
+        //TilePosition startPosition = new TilePosition(1, 1);
 
         tileMngr.CreateTile(startPosition, gameData.tileCrownSO);
 

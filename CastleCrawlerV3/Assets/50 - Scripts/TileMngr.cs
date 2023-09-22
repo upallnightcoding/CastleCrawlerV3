@@ -79,8 +79,7 @@ public class TileMngr : MonoBehaviour
 
         if (!offTheBoard)
         {
-            bool tileIsBlocked = tileCntrls[position.Col, position.Row].Tile.IsTileBlocked();
-            valid = (tileIsBlocked) ? StepValidType.BLOCKED : StepValidType.OPEN;
+            valid = tileCntrls[position.Col, position.Row].Tile.IsTileBlocked();
         }
 
         return (valid);
@@ -118,5 +117,6 @@ public enum StepValidType
 {
     OPEN,
     BLOCKED,
+    PASS_THROUGH,
     OFF_BOARD
 }

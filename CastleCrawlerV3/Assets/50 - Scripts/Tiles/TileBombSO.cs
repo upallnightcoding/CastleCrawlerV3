@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "TileHeartSO", menuName = "CasteCrawler/Tile/Heart")]
-public class TileHeartSO : TileSO
+[CreateAssetMenu(fileName = "TileBombSO", menuName = "CasteCrawler/Tile/Bomb")]
+public class TileBombSO : TileSO
 {
     public override IEnumerator BlockedTile(TilePosition position)
     {

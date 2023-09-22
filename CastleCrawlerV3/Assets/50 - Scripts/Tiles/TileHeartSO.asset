@@ -16,7 +16,7 @@ MonoBehaviour:
   image: {fileID: 21300000, guid: 58f65c854faec624f99e79b1cb496919, type: 3}
   prompt: Heart
   isTileOpen: 0
-  isTileBlocked: 1
+  isTileBlocked: 2
   isSupportProp: 0
   animation: {fileID: 5674873665427201444, guid: 38fa9afe9c1fca24fafe28b27ebdb1d7, type: 3}
   isShowing: 1

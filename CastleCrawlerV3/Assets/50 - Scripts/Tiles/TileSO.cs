@@ -9,7 +9,7 @@ public class TileSO : ScriptableObject, TileBase
     public Sprite image;
     public string prompt;
     public bool isTileOpen;
-    public bool isTileBlocked;
+    public StepValidType isTileBlocked;
     public bool isSupportProp;
     public GameObject animation;
     public bool isShowing;
@@ -22,7 +22,7 @@ public class TileSO : ScriptableObject, TileBase
 
     public virtual bool IsTileOpen() => isTileOpen;
 
-    public virtual bool IsTileBlocked() => isTileBlocked;
+    public virtual StepValidType IsTileBlocked() => isTileBlocked;
 
     public virtual bool IsSupportProp() => isSupportProp;
 
