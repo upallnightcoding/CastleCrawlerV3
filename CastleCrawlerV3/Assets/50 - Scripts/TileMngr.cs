@@ -30,14 +30,17 @@ public class TileMngr : MonoBehaviour
     public bool IsTileOpen(TilePosition position) =>
         tileCntrls[position.Col, position.Row].Tile.IsTileOpen();
 
-    public void Animate(TilePosition position) =>
-        tileCntrls[position.Col, position.Row].Animate(position);
+    //public void Animate(TilePosition position) =>
+      //  tileCntrls[position.Col, position.Row].Animate(position);
 
     public void Set(TilePosition position, GameObject tile, TileSO tileSO) =>
         Set(position.Col, position.Row, tile, tileSO);
 
-    public void Set(TilePosition position, Sprite color) =>
+    public void SetTileColor(TilePosition position, Sprite color) =>
         tileCntrls[position.Col, position.Row].Set(color);
+
+    public void SetTileToOpen(TilePosition position) =>
+        tileCntrls[position.Col, position.Row].SetTileBlockedOpen();
 
     public void Undo(TilePosition position) =>
         tileCntrls[position.Col, position.Row].Undo();
@@ -79,13 +82,13 @@ public class TileMngr : MonoBehaviour
 
         if (!offTheBoard)
         {
-            valid = tileCntrls[position.Col, position.Row].Tile.IsTileBlocked();
+            valid = tileCntrls[position.Col, position.Row].GetTileBlocking();
         }
 
         return (valid);
     }
 
-    public void BlockedTile(TilePosition position)
+    public void AnimateBlocking(TilePosition position)
     {
         StartCoroutine(tileCntrls[position.Col, position.Row].Tile.BlockedTile(position));
     }

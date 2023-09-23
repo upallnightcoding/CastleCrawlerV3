@@ -18,6 +18,8 @@ public class TileCntrl : MonoBehaviour
 
     private bool isShowingImage = false;
 
+    private StepValidType typeTileBlocking = StepValidType.BLOCKED;
+
     private string resetText;
 
     public TileBase Tile 
@@ -37,6 +39,7 @@ public class TileCntrl : MonoBehaviour
             }
 
             isShowingImage = tile.IsShowing();
+            typeTileBlocking = tile.GetTileBlocking();
 
             background.gameObject.SetActive(true);
             background.sprite = tile.GetBackGround();
@@ -74,7 +77,23 @@ public class TileCntrl : MonoBehaviour
     }
 
     /**
-     * Set() - 
+     * SetTileBlockedOpen() - Set the tile type to OPEN.  Usually done
+     * after something has tripped the tile's animation.  This is done 
+     * reguardless of the current tile type.
+     */
+    public void SetTileBlockedOpen()
+    {
+        typeTileBlocking = StepValidType.OPEN;
+    }
+
+    public StepValidType GetTileBlocking()
+    {
+        return (typeTileBlocking);
+    }
+
+    /**
+     * Set() - Sets the background of a tile and sets the stacks
+     * in order to undo the action.
      */
     public void Set(Sprite newBackGroundSprite)
     {
@@ -84,14 +103,10 @@ public class TileCntrl : MonoBehaviour
         background.sprite = newBackGroundSprite;
     }
 
-    public void Animate(TilePosition position)
-    {
-        //GameObject go = tile.BlockedTile(position);
-        //Destroy(go, 2.0f);
-    }
-
     /**
-     * Undo() - 
+     * Undo() - If the undo stacks are not empty, pop the value at
+     * the top of the background and text stack.  Once the data is 
+     * popped it can not be retrieved.
      */
     public void Undo()
     {

@@ -55,8 +55,8 @@ public class BoardCntrl : MonoBehaviour
 
         Stack<Move> moves = CreateAPath();
 
-        //PlaceTileOnBoard(gameData.tileShieldSO, 20);
-        PlaceTileOnBoard(gameData.tileBombSO, 25);
+        PlaceTileOnBoard(gameData.tileShieldSO, 20);
+        //PlaceTileOnBoard(gameData.tileBombSO, 25);
         //PlaceTileOnBoard(gameData.tileHeartSO, 10);
 
         return (moves);
@@ -127,7 +127,7 @@ public class BoardCntrl : MonoBehaviour
         Sprite color,
         TilePosition startingTile,
         List<TilePosition> tracking
-     )
+    )
     {
         bool completedMove = false;
 
@@ -136,12 +136,14 @@ public class BoardCntrl : MonoBehaviour
             case StepValidType.OPEN:
                 completedMove = true;
                 tracking.Add(new TilePosition(currentPlayPos));
-                tileMngr.Set(currentPlayPos, color);
+                tileMngr.SetTileColor(currentPlayPos, color);
+                GameManagerCntrl.Instance.AddGameLevel();
                 break;
             case StepValidType.PASS_THROUGH:
                 completedMove = true;
-                tileMngr.BlockedTile(currentPlayPos);
-                tileMngr.Set(currentPlayPos, color);
+                tileMngr.AnimateBlocking(currentPlayPos);
+                tileMngr.SetTileColor(currentPlayPos, color);
+                tileMngr.SetTileToOpen(currentPlayPos);
                 break;
             case StepValidType.OFF_BOARD:
             case StepValidType.BLOCKED:
@@ -193,16 +195,16 @@ public class BoardCntrl : MonoBehaviour
         return (currentPlayPos);
     }
 
-    private IEnumerator LaydownTiles(List<TilePosition> tracking, Sprite color)
+    /*private IEnumerator LaydownTiles(List<TilePosition> tracking, Sprite color)
     {
         foreach (TilePosition position in tracking)
         {
             tileMngr.Set(position, color);
             yield return new WaitForSeconds(0.75f);
         }
-    }
+    }*/
 
-    private IEnumerator LaydownInValidTiles(List<TilePosition> tracking, Sprite color)
+    /*private IEnumerator LaydownInValidTiles(List<TilePosition> tracking, Sprite color)
     {
         int count = tracking.Count;
         TilePosition position = null;
@@ -226,7 +228,7 @@ public class BoardCntrl : MonoBehaviour
 
             tileMngr.ShowImage(position);
         }
-    }
+    }*/
 
     #endregion
 

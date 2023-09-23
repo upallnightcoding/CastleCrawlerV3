@@ -22,6 +22,16 @@ public class GameManagerCntrl : MonoBehaviour
         }
     }
 
+    public void UpdateHeartCount(int count)
+    {
+        uiCntrl.UpdateHeartCount(count);
+    }
+
+    public void AddGameLevel()
+    {
+        uiCntrl.AddGameLevel();
+    }
+
     public void DisplayIllegalMoveBanner()
     {
         uiCntrl.DisplayIllegalMoveBanner();

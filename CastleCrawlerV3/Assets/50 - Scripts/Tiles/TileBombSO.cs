@@ -16,6 +16,8 @@ public class TileBombSO : TileSO
             );
         }
 
+        GameManagerCntrl.Instance.UpdateHeartCount(-1);
+
         yield return null;
     }
 }

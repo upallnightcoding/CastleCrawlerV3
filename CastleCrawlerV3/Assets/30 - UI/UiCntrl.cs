@@ -19,12 +19,15 @@ public class UiCntrl : MonoBehaviour
     [SerializeField] private GameObject looseBanner;
     [SerializeField] private GameObject illegalMoveBanner;
 
+    // Dictionary of button controllers by name
     private Dictionary<string, DirBtnCntrl> dirBtnDict;
 
+    // List of direction buttons
     private List<GameObject> listOfDirBtns = null;
 
     private int starCounter = 0;
 
+    // Number if hearts at th beginning of the game
     private int health = 3;
 
     private void Start()
@@ -33,9 +36,22 @@ public class UiCntrl : MonoBehaviour
         level.text = gameData.level.ToString();
     }
 
+    /**
+     * DisplayIllegalMoveBanner() - Displays the illegal move Banner
+     */
     public void DisplayIllegalMoveBanner()
     {
         StartCoroutine(DisplayBanner(illegalMoveBanner));
+    }
+
+    public void UpdateHeartCount(int count)
+    {
+        health += count;
+
+        if (health > 0)
+        {
+            heartsCnt.text = health.ToString();
+        }
     }
 
     IEnumerator DisplayBanner(GameObject banner)
@@ -62,9 +78,9 @@ public class UiCntrl : MonoBehaviour
     }
 
     /**
-     * UpdateGameLevel() - 
+     * AddGameLevel() - 
      */
-    public void UpdateGameLevel()
+    public void AddGameLevel()
     {
         switch(++starCounter)
         {

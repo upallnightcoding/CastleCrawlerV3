@@ -22,7 +22,7 @@ public class TileSO : ScriptableObject, TileBase
 
     public virtual bool IsTileOpen() => isTileOpen;
 
-    public virtual StepValidType IsTileBlocked() => isTileBlocked;
+    public virtual StepValidType GetTileBlocking() => isTileBlocked;
 
     public virtual bool IsSupportProp() => isSupportProp;
 
