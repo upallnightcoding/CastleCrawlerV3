@@ -20,8 +20,6 @@ public class BoardCntrl : MonoBehaviour
 
     private Stack<string> moveStack;
 
-    private bool completedMove = false;
-
     private bool SafeGuard(int count) => count < gameData.safeGuardLimit;
     private bool BuildingPath(int level) => level < gameData.level;
 
@@ -55,9 +53,9 @@ public class BoardCntrl : MonoBehaviour
 
         Stack<Move> moves = CreateAPath();
 
-        PlaceTileOnBoard(gameData.tileShieldSO, 20);
-        //PlaceTileOnBoard(gameData.tileBombSO, 25);
-        //PlaceTileOnBoard(gameData.tileHeartSO, 10);
+        PlaceTileOnBoard(gameData.tileShieldSO, 10);
+        PlaceTileOnBoard(gameData.tileBombSO, 10);
+        PlaceTileOnBoard(gameData.tileHeartSO, 10);
 
         return (moves);
     }
@@ -90,17 +88,15 @@ public class BoardCntrl : MonoBehaviour
 
     public bool OnPlayerMove(string moveName, Sprite color)
     {
-        StartCoroutine(OnPlayerMoveCR(moveName, color));
-
-        return(completedMove);
+        return(OnPlayerMoveCR(moveName, color));
     }
 
     /**
      * OnPlayerMove() - 
      */
-    public IEnumerator OnPlayerMoveCR(string moveName, Sprite color)
+    public bool OnPlayerMoveCR(string moveName, Sprite color)
     {
-        completedMove = true;
+        bool completedMove = true;
         StepValidType isStepValid = StepValidType.OPEN;
         List<TilePosition> tracking = new List<TilePosition>();
         TilePosition startingTile = new TilePosition(currentPlayPos);
@@ -112,14 +108,14 @@ public class BoardCntrl : MonoBehaviour
             isStepValid = tileMngr.IsStepValid(currentPlayPos);
 
             completedMove = CheckStepValid(isStepValid, color, startingTile, tracking);
-
-            yield return new WaitForSeconds(0.75f);
         }
 
         if(completedMove)
         {
             moveStack.Push(moveName);
         }
+
+        return (completedMove);
     }
 
     private bool CheckStepValid(
@@ -137,13 +133,10 @@ public class BoardCntrl : MonoBehaviour
                 completedMove = true;
                 tracking.Add(new TilePosition(currentPlayPos));
                 tileMngr.SetTileColor(currentPlayPos, color);
-                GameManagerCntrl.Instance.AddGameLevel();
                 break;
             case StepValidType.PASS_THROUGH:
                 completedMove = true;
-                tileMngr.AnimateBlocking(currentPlayPos);
-                tileMngr.SetTileColor(currentPlayPos, color);
-                tileMngr.SetTileToOpen(currentPlayPos);
+                tileMngr.PassThrough(currentPlayPos, color);
                 break;
             case StepValidType.OFF_BOARD:
             case StepValidType.BLOCKED:
@@ -350,6 +343,10 @@ public class BoardCntrl : MonoBehaviour
         return (moves);
     }
 
+    /**
+     * SelectRandomPosition() - Select a random tile position on the board.
+     * No check is done to make sure the tile is not already occupied.
+     */
     private TilePosition SelectRandomPosition()
     {
         int col = Random.Range(0, boardSize);
@@ -358,15 +355,17 @@ public class BoardCntrl : MonoBehaviour
         return (new TilePosition(col, row));
     }
 
+    /**
+     * SelectStartingPoint() - Randomly select a starting point on the board.  
+     * There is no check to make sure a tile is not occupied.  The crown tile
+     * is then placed at the starting point.
+     */
     private TilePosition SelectStartingPoint()
     {
         TilePosition startPosition = SelectRandomPosition();
-        //TilePosition startPosition = new TilePosition(1, 1);
 
         tileMngr.CreateTile(startPosition, gameData.tileCrownSO);
 
         return (startPosition);
     }
-
-    //private Vector3 GetTilePos(int x, int z) => new Vector3(x, 0.0f, z);
 }

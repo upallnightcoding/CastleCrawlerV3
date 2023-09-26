@@ -25,7 +25,7 @@ public class TileMngr : MonoBehaviour
         tileCntrls[position.Col, position.Row].ResetTile();
 
     public void ShowImage(TilePosition position) =>
-        tileCntrls[position.Col, position.Row].ShowImage();
+        tileCntrls[position.Col, position.Row].DisplayImage();
 
     public bool IsTileOpen(TilePosition position) =>
         tileCntrls[position.Col, position.Row].Tile.IsTileOpen();
@@ -88,9 +88,15 @@ public class TileMngr : MonoBehaviour
         return (valid);
     }
 
-    public void AnimateBlocking(TilePosition position)
+    /**
+     * PassThrough() - 
+     */
+    public void PassThrough(
+        TilePosition position,
+        Sprite color
+    )
     {
-        StartCoroutine(tileCntrls[position.Col, position.Row].Tile.BlockedTile(position));
+        tileCntrls[position.Col, position.Row].Tile.PassThrough(this, position, color);
     }
 
     private void Set(int col, int row, GameObject tile, TileSO tileSO)

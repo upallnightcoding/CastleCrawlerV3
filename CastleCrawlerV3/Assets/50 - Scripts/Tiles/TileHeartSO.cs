@@ -5,7 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "TileHeartSO", menuName = "CasteCrawler/Tile/Heart")]
 public class TileHeartSO : TileSO
 {
-    public override IEnumerator BlockedTile(TilePosition position)
+    public override void PassThrough(
+        TileMngr tileMngr, 
+        TilePosition position, 
+        Sprite color
+    )
     {
         if (animation != null)
         {
@@ -16,6 +20,10 @@ public class TileHeartSO : TileSO
             );
         }
 
-        yield return null;
+        GameManagerCntrl.Instance.UpdateHeartCount(1);
+
+        tileMngr.SetTileColor(position, color);
+
+        tileMngr.SetTileToOpen(position);
     }
 }

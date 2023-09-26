@@ -7,6 +7,11 @@ public class TilePosition
     public int Col { get; private set; } = 0;
     public int Row { get; private set; } = 0;
 
+    public void Output(string text)
+    {
+        Debug.Log($"{text}: {Col},{Row}");
+    }
+
     public TilePosition(int col, int row)
     {
         this.Col = col;

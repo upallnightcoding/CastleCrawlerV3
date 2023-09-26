@@ -18,6 +18,7 @@ public class UiCntrl : MonoBehaviour
     [SerializeField] private GameObject winBanner;
     [SerializeField] private GameObject looseBanner;
     [SerializeField] private GameObject illegalMoveBanner;
+    [SerializeField] private TMP_Text bombShowText;
 
     // Dictionary of button controllers by name
     private Dictionary<string, DirBtnCntrl> dirBtnDict;
@@ -30,6 +31,8 @@ public class UiCntrl : MonoBehaviour
     // Number if hearts at th beginning of the game
     private int health = 3;
 
+    private bool bombShowSw = false;
+
     private void Start()
     {
         listOfDirBtns = new List<GameObject>();
@@ -39,11 +42,25 @@ public class UiCntrl : MonoBehaviour
     /**
      * DisplayIllegalMoveBanner() - Displays the illegal move Banner
      */
-    public void DisplayIllegalMoveBanner()
-    {
+    public void DisplayIllegalMoveBanner() =>
         StartCoroutine(DisplayBanner(illegalMoveBanner));
+
+    public void DisplayWinBanner() =>
+        StartCoroutine(DisplayBanner(winBanner));
+
+    /**
+     * BombShowSw() - 
+     */
+    public void BombShowSw()
+    {
+        bombShowSw = !bombShowSw;
+
+        bombShowText.text = (bombShowSw) ? "Hide Bombs" : "Show Bombs";
     }
 
+    /**
+     * UpdateHeartCount() - 
+     */
     public void UpdateHeartCount(int count)
     {
         health += count;
@@ -70,12 +87,12 @@ public class UiCntrl : MonoBehaviour
         dirBtnDict[moveName].UpdateMoveCounter();
     }
 
-    public void UpdateHealth(int hearts)
+    /*public void UpdateHealth(int hearts)
     {
         health += hearts;
 
         heartsCnt.text = "x" + health.ToString();
-    }
+    }*/
 
     /**
      * AddGameLevel() - 

@@ -67,13 +67,17 @@ public class TileCntrl : MonoBehaviour
         prompt.text = resetText;
     }
 
-    public void ShowImage()
+    /**
+     * DisplayImage() -
+     */
+    public void DisplayImage()
     {
         if (tile.GetForeGroundImage() != null)
         {
-            image.gameObject.SetActive(true);
+            isShowingImage = true;
+            image.gameObject.SetActive(isShowingImage);
             image.sprite = tile.GetForeGroundImage();
-        }
+        } 
     }
 
     /**

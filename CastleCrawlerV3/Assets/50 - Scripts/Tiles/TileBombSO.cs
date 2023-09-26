@@ -5,7 +5,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "TileBombSO", menuName = "CasteCrawler/Tile/Bomb")]
 public class TileBombSO : TileSO
 {
-    public override IEnumerator BlockedTile(TilePosition position)
+    public override void PassThrough(
+        TileMngr tileMngr,
+        TilePosition position,
+        Sprite color
+    )
     {
         if (animation != null)
         {
@@ -18,6 +22,8 @@ public class TileBombSO : TileSO
 
         GameManagerCntrl.Instance.UpdateHeartCount(-1);
 
-        yield return null;
+        tileMngr.SetTileColor(position, color);
+
+        tileMngr.SetTileToOpen(position);
     }
 }

@@ -28,8 +28,13 @@ public class TileSO : ScriptableObject, TileBase
 
     public virtual bool IsShowing() => isShowing;
 
-    public virtual IEnumerator BlockedTile(TilePosition position)
+    public virtual void PassThrough(
+        TileMngr tileMngr, 
+        TilePosition position, 
+        Sprite color
+    )
     {
-        yield return null;
+        tileMngr.SetTileColor(position, color);
+        tileMngr.SetTileToOpen(position);
     }
 }

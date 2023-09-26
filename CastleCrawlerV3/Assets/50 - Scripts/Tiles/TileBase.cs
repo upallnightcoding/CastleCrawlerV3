@@ -16,7 +16,7 @@ public interface TileBase
 
     public bool IsSupportProp();
 
-    public IEnumerator BlockedTile(TilePosition position);
+    public void PassThrough(TileMngr tileMngr, TilePosition position, Sprite color);
 
     public bool IsShowing();
 }

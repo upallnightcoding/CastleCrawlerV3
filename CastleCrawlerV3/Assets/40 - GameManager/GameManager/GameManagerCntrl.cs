@@ -5,7 +5,8 @@ using UnityEngine;
 public class GameManagerCntrl : MonoBehaviour
 {
     [SerializeField] private BoardCntrl boardCntrl;
-    [SerializeField] UiCntrl uiCntrl;
+    [SerializeField] private UiCntrl uiCntrl;
+    [SerializeField] private TileSO tileBombSO;
 
     public static GameManagerCntrl Instance = null;
 
@@ -27,8 +28,10 @@ public class GameManagerCntrl : MonoBehaviour
         uiCntrl.UpdateHeartCount(count);
     }
 
-    public void AddGameLevel()
+    public void IncreaseGameLevel()
     {
+        uiCntrl.DisplayWinBanner();
+
         uiCntrl.AddGameLevel();
     }
 
@@ -47,6 +50,19 @@ public class GameManagerCntrl : MonoBehaviour
         }
     }
 
+    public void BombShowSw()
+    {
+        uiCntrl.BombShowSw();
+
+        tileBombSO.isShowing = !tileBombSO.isShowing;
+    }
+
+    /**
+     * OnPlayerMove() - When a player makes a move, make sure that
+     * the move IS enabled.  Make sure that the play move is illegal.
+     * If the move creates end-of-game, display the Winner
+     * Banner.
+     */
     public void OnPlayerMove(string move, Sprite color)
     {
         if (uiCntrl.IsDirBtnEnabled(move))
@@ -57,12 +73,15 @@ public class GameManagerCntrl : MonoBehaviour
 
                 if (boardCntrl.IsFinished() && uiCntrl.TotalPointsIsZero())
                 {
-                    //uiCntrl.DisplayWinBanner();
+                    IncreaseGameLevel();
                 }
             }
         }
     }
 
+    /**
+     * OnUndoPlayerMove() - 
+     */
     public void OnUndoPlayerMove()
     {
         string moveName = boardCntrl.UndoPlayerMove();
