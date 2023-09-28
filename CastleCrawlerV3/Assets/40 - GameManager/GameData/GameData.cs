@@ -17,6 +17,11 @@ public class GameData : ScriptableObject
     public bool debugSw;
     public int boardSize;
 
+    [Header("Props Count")]
+    public int numberShields;
+    public int numberBombs;
+    public int numberHearts;
+
     [Header("Tile Background Colors")]
     public Material TileColorGray;
     public Material TileColorWhite;

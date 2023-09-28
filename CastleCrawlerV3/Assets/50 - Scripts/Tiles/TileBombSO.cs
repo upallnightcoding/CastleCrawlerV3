@@ -23,7 +23,7 @@ public class TileBombSO : TileSO
         GameManagerCntrl.Instance.UpdateHeartCount(-1);
 
         tileMngr.SetTileColor(position, color);
-
+        tileMngr.ShowImage(position);
         tileMngr.SetTileToOpen(position);
     }
 }

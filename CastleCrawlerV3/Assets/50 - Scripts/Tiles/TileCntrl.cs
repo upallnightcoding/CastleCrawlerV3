@@ -85,12 +85,17 @@ public class TileCntrl : MonoBehaviour
      * after something has tripped the tile's animation.  This is done 
      * reguardless of the current tile type.
      */
-    public void SetTileBlockedOpen()
+    public void SetTileBlockedToOpen()
     {
         typeTileBlocking = StepValidType.OPEN;
     }
 
-    public StepValidType GetTileBlocking()
+    public void SetTileToBlocked()
+    {
+        typeTileBlocking = StepValidType.BLOCKED;
+    }
+
+    public StepValidType GetTileBlockingType()
     {
         return (typeTileBlocking);
     }

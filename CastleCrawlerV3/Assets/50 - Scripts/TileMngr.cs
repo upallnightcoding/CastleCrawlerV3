@@ -40,7 +40,10 @@ public class TileMngr : MonoBehaviour
         tileCntrls[position.Col, position.Row].Set(color);
 
     public void SetTileToOpen(TilePosition position) =>
-        tileCntrls[position.Col, position.Row].SetTileBlockedOpen();
+        tileCntrls[position.Col, position.Row].SetTileBlockedToOpen();
+
+    public void SetTileToBlocked(TilePosition position) =>
+        tileCntrls[position.Col, position.Row].SetTileToBlocked();
 
     public void Undo(TilePosition position) =>
         tileCntrls[position.Col, position.Row].Undo();
@@ -82,7 +85,7 @@ public class TileMngr : MonoBehaviour
 
         if (!offTheBoard)
         {
-            valid = tileCntrls[position.Col, position.Row].GetTileBlocking();
+            valid = tileCntrls[position.Col, position.Row].GetTileBlockingType();
         }
 
         return (valid);

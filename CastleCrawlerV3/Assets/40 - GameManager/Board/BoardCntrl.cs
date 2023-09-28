@@ -53,9 +53,9 @@ public class BoardCntrl : MonoBehaviour
 
         Stack<Move> moves = CreateAPath();
 
-        PlaceTileOnBoard(gameData.tileShieldSO, 10);
-        PlaceTileOnBoard(gameData.tileBombSO, 10);
-        PlaceTileOnBoard(gameData.tileHeartSO, 10);
+        PlaceTileOnBoard(gameData.tileShieldSO, gameData.numberShields);
+        PlaceTileOnBoard(gameData.tileBombSO, gameData.numberBombs);
+        PlaceTileOnBoard(gameData.tileHeartSO, gameData.numberHearts);
 
         return (moves);
     }
@@ -133,6 +133,7 @@ public class BoardCntrl : MonoBehaviour
                 completedMove = true;
                 tracking.Add(new TilePosition(currentPlayPos));
                 tileMngr.SetTileColor(currentPlayPos, color);
+                tileMngr.SetTileToBlocked(currentPlayPos);
                 break;
             case StepValidType.PASS_THROUGH:
                 completedMove = true;
@@ -187,41 +188,6 @@ public class BoardCntrl : MonoBehaviour
 
         return (currentPlayPos);
     }
-
-    /*private IEnumerator LaydownTiles(List<TilePosition> tracking, Sprite color)
-    {
-        foreach (TilePosition position in tracking)
-        {
-            tileMngr.Set(position, color);
-            yield return new WaitForSeconds(0.75f);
-        }
-    }*/
-
-    /*private IEnumerator LaydownInValidTiles(List<TilePosition> tracking, Sprite color)
-    {
-        int count = tracking.Count;
-        TilePosition position = null;
-
-        for (int i = 0; i < count; i++)
-        {
-            position = tracking[i];
-            tileMngr.Set(position, color);
-
-            yield return new WaitForSeconds((i < count - 1) ? 0.75f : 0.1f);
-        }
-
-        if (position != null)
-        {
-            tileMngr.Animate(position);
-
-            foreach (TilePosition resetPosition in tracking)
-            {
-                tileMngr.Undo(resetPosition);
-            }
-
-            tileMngr.ShowImage(position);
-        }
-    }*/
 
     #endregion
 

@@ -8,9 +8,9 @@ public class UiCntrl : MonoBehaviour
 {
     [SerializeField] private Transform dirBtnContainer;
     [SerializeField] private GameObject dirBtnPreFab;
-    [SerializeField] private TMP_Text level;
+    [SerializeField] private TMP_Text levelTxt;
     [SerializeField] private GameData gameData;
-    [SerializeField] private TMP_Text heartsCnt;
+    [SerializeField] private TMP_Text heartsCntTxt;
     [SerializeField] private Image star1On;
     [SerializeField] private Image star2On;
     [SerializeField] private Image star3On;
@@ -18,7 +18,7 @@ public class UiCntrl : MonoBehaviour
     [SerializeField] private GameObject winBanner;
     [SerializeField] private GameObject looseBanner;
     [SerializeField] private GameObject illegalMoveBanner;
-    [SerializeField] private TMP_Text bombShowText;
+    [SerializeField] private TMP_Text moveCountDownTxt;
 
     // Dictionary of button controllers by name
     private Dictionary<string, DirBtnCntrl> dirBtnDict;
@@ -31,12 +31,11 @@ public class UiCntrl : MonoBehaviour
     // Number if hearts at th beginning of the game
     private int health = 3;
 
-    private bool bombShowSw = false;
+    private UiValue moveCountDown = null;
 
     private void Start()
     {
         listOfDirBtns = new List<GameObject>();
-        level.text = gameData.level.ToString();
     }
 
     /**
@@ -49,16 +48,6 @@ public class UiCntrl : MonoBehaviour
         StartCoroutine(DisplayBanner(winBanner));
 
     /**
-     * BombShowSw() - 
-     */
-    public void BombShowSw()
-    {
-        bombShowSw = !bombShowSw;
-
-        bombShowText.text = (bombShowSw) ? "Hide Bombs" : "Show Bombs";
-    }
-
-    /**
      * UpdateHeartCount() - 
      */
     public void UpdateHeartCount(int count)
@@ -67,7 +56,7 @@ public class UiCntrl : MonoBehaviour
 
         if (health > 0)
         {
-            heartsCnt.text = health.ToString();
+            heartsCntTxt.text = health.ToString();
         }
     }
 
@@ -85,14 +74,18 @@ public class UiCntrl : MonoBehaviour
     public void OnPlayerMove(string moveName)
     {
         dirBtnDict[moveName].UpdateMoveCounter();
+
+        moveCountDown.update(-1);
     }
 
-    /*public void UpdateHealth(int hearts)
+    /**
+     * OnBadPlayerMove() - If a player makes a bad move the UI still
+     * needs to be updated to reflect the move.
+     */
+    public void OnBadPlayerMove()
     {
-        health += hearts;
-
-        heartsCnt.text = "x" + health.ToString();
-    }*/
+        moveCountDown.update(-1);
+    }
 
     /**
      * AddGameLevel() - 
@@ -114,12 +107,15 @@ public class UiCntrl : MonoBehaviour
                 star1On.gameObject.SetActive(false);
                 star2On.gameObject.SetActive(false);
                 star3On.gameObject.SetActive(false);
-                level.text = (++gameData.level).ToString();
+                levelTxt.text = (++gameData.level).ToString();
                 starCounter = 0;
                 break;
         }
     }
 
+    /**
+     * TotalPointsIsZero() - 
+     */
     public bool TotalPointsIsZero()
     {
         int total = 0;
@@ -134,12 +130,18 @@ public class UiCntrl : MonoBehaviour
         return (total == 0);
     }
 
+    /**
+     * StartNewGame() - 
+     */
     public void StartNewGame(Stack<Move> moves)
     {
         Dictionary<string, int> moveCntDict = new Dictionary<string, int>();
         dirBtnDict = new Dictionary<string, DirBtnCntrl>();
+        levelTxt.text = gameData.level.ToString();
 
         listOfDirBtns.ForEach((element) => Destroy(element));
+
+        moveCountDown = new UiValue(moveCountDownTxt, 2 * gameData.level);
 
         foreach (Move move in moves)
         {
@@ -169,13 +171,39 @@ public class UiCntrl : MonoBehaviour
         }
     }
 
+    /**
+     * UndoPlayerMove() - Undo a player's move by updating the count of
+     * the direction button and counting down to zero the number of turns
+     * taken.
+     */
     public void UndoPlayerMove(string moveName)
     {
         dirBtnDict[moveName].UndoPlayerMove();
+
+        moveCountDown.update(-1);
     }
 
     public bool IsDirBtnEnabled(string moveName)
     {
         return (dirBtnDict[moveName].IsDirBtnEnabled());
+    }
+}
+
+public class UiValue
+{
+    private int value;
+    private TMP_Text textValue;
+
+    public UiValue(TMP_Text text, int initialValue)
+    {
+        textValue = text;
+        value = initialValue;
+        textValue.text = initialValue.ToString();
+    }
+
+    public void update(int update)
+    {
+        value += update;
+        textValue.text = value.ToString();
     }
 }

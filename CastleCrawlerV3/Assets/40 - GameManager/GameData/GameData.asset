@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: GameData
   m_EditorClassIdentifier: 
   safeGuardLimit: 500
-  level: 2
-  debugSw: 0
+  level: 5
+  debugSw: 1
   boardSize: 10
+  numberShields: 10
+  numberBombs: 10
+  numberHearts: 10
   TileColorGray: {fileID: 2100000, guid: af4b74ce7239d4145aaf1a063a061ed7, type: 2}
   TileColorWhite: {fileID: 2100000, guid: 8278ffac5ce738141a010cff930db53d, type: 2}
   tileBlankSO: {fileID: 11400000, guid: 9122c9259dd76334caafda67e3dab314, type: 2}

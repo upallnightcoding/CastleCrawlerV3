@@ -50,13 +50,6 @@ public class GameManagerCntrl : MonoBehaviour
         }
     }
 
-    public void BombShowSw()
-    {
-        uiCntrl.BombShowSw();
-
-        tileBombSO.isShowing = !tileBombSO.isShowing;
-    }
-
     /**
      * OnPlayerMove() - When a player makes a move, make sure that
      * the move IS enabled.  Make sure that the play move is illegal.
@@ -75,6 +68,9 @@ public class GameManagerCntrl : MonoBehaviour
                 {
                     IncreaseGameLevel();
                 }
+            } else
+            {
+                uiCntrl.OnBadPlayerMove();
             }
         }
     }

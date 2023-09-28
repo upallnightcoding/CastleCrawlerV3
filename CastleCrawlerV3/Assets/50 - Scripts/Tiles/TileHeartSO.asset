@@ -19,4 +19,4 @@ MonoBehaviour:
   isTileBlocked: 2
   isSupportProp: 0
   animation: {fileID: 5674873665427201444, guid: 38fa9afe9c1fca24fafe28b27ebdb1d7, type: 3}
-  isShowing: 1
+  isShowing: 0
