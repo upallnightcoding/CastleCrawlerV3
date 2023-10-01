@@ -18,6 +18,7 @@ public class UiCntrl : MonoBehaviour
     [SerializeField] private GameObject winBanner;
     [SerializeField] private GameObject looseBanner;
     [SerializeField] private GameObject illegalMoveBanner;
+    [SerializeField] private GameObject blockedMoveBanner;
     [SerializeField] private TMP_Text moveCountDownTxt;
 
     // Dictionary of button controllers by name
@@ -46,6 +47,9 @@ public class UiCntrl : MonoBehaviour
 
     public void DisplayWinBanner() =>
         StartCoroutine(DisplayBanner(winBanner));
+
+    public void DisplayBlockedBanner() =>
+        StartCoroutine(DisplayBanner(blockedMoveBanner));
 
     /**
      * UpdateHeartCount() - 
@@ -138,6 +142,7 @@ public class UiCntrl : MonoBehaviour
         Dictionary<string, int> moveCntDict = new Dictionary<string, int>();
         dirBtnDict = new Dictionary<string, DirBtnCntrl>();
         levelTxt.text = gameData.level.ToString();
+        int index = 0;
 
         listOfDirBtns.ForEach((element) => Destroy(element));
 
@@ -155,15 +160,33 @@ public class UiCntrl : MonoBehaviour
             }
         }
 
-        int colorIndex = 0;
+        string[] moveList = new string[moveCntDict.Count];
+        index = 0;
 
         foreach (string moveName in moveCntDict.Keys)
+        {
+            moveList[index++] = moveName;
+        }
+
+        for (int i = 0; i < moveCntDict.Count; i++)
+        {
+            int indexA = Random.Range(0, moveList.Length);
+            int indexB = Random.Range(0, moveList.Length);
+
+            string value = moveList[indexA];
+            moveList[indexA] = moveList[indexB];
+            moveList[indexB] = value;
+        }
+
+        index = 0;
+
+        foreach (string moveName in moveList)
         {
             int count = moveCntDict[moveName];
 
             GameObject button = Object.Instantiate(dirBtnPreFab, dirBtnContainer);
             DirBtnCntrl dirBtnCntrl = button.GetComponent<DirBtnCntrl>();
-            dirBtnCntrl.Initialize(moveName, colorIndex++, count);
+            dirBtnCntrl.Initialize(moveName, index++, count);
 
             dirBtnDict[moveName] = dirBtnCntrl;
 

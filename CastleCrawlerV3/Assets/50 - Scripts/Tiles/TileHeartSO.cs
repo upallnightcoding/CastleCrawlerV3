@@ -5,22 +5,26 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "TileHeartSO", menuName = "CasteCrawler/Tile/Heart")]
 public class TileHeartSO : TileSO
 {
-    public override void PassThrough(
+    public override void Animation(
         TileMngr tileMngr, 
         TilePosition position, 
-        Sprite color
+        Sprite color,
+        bool firstCall
     )
     {
-        if (animation != null)
+        if (firstCall)
         {
-            GameObject go = Object.Instantiate(
-                animation,
-                position.GetTilePos() + new Vector3(0.0f, 0.02f, 0.0f),
-                Quaternion.identity
-            );
-        }
+            if (animation != null)
+            {
+                GameObject go = Object.Instantiate(
+                    animation,
+                    position.GetTilePos() + new Vector3(0.0f, 0.02f, 0.0f),
+                    Quaternion.identity
+                );
+            }
 
-        GameManagerCntrl.Instance.UpdateHeartCount(1);
+            GameManagerCntrl.Instance.UpdateHeartCount(1);
+        }
 
         tileMngr.SetTileColor(position, color);
         tileMngr.ShowImage(position);

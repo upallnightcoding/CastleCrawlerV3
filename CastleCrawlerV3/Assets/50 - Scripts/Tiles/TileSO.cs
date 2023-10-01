@@ -28,10 +28,11 @@ public class TileSO : ScriptableObject, TileBase
 
     public virtual bool IsShowing() => isShowing;
 
-    public virtual void PassThrough(
+    public virtual void Animation(
         TileMngr tileMngr, 
         TilePosition position, 
-        Sprite color
+        Sprite color,
+        bool firstCall
     )
     {
         tileMngr.SetTileColor(position, color);

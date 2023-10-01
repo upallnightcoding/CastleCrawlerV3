@@ -12,7 +12,7 @@ public class TileCntrl : MonoBehaviour
     [SerializeField] private Image background;
 
     private Stack<Sprite> undoBGStack = new Stack<Sprite>();
-    private Stack<string> undoTextStack = new Stack<string>();
+    private Stack<StepValidType> undoBlocking = new Stack<StepValidType>();
 
     private TileBase tile;
 
@@ -21,6 +21,8 @@ public class TileCntrl : MonoBehaviour
     private StepValidType typeTileBlocking = StepValidType.BLOCKED;
 
     private string resetText;
+
+    private bool firstCall = true;
 
     public TileBase Tile 
     {
@@ -60,6 +62,17 @@ public class TileCntrl : MonoBehaviour
             resetText = prompt.text;
         } 
     
+    }
+
+    public void Animation(
+        TileMngr tileMngr,
+        TilePosition position,
+        Sprite color
+    )
+    {
+        Tile.Animation(tileMngr, position, color, firstCall);
+
+        firstCall = false;
     }
 
     public void ResetTile()
@@ -107,7 +120,7 @@ public class TileCntrl : MonoBehaviour
     public void Set(Sprite newBackGroundSprite)
     {
         undoBGStack.Push(this.background.sprite);
-        undoTextStack.Push(prompt.text);
+        undoBlocking.Push(typeTileBlocking);
 
         background.sprite = newBackGroundSprite;
     }
@@ -121,8 +134,8 @@ public class TileCntrl : MonoBehaviour
     {
         if (undoBGStack.Count > 0)
         {
-            this.background.sprite = undoBGStack.Pop();
-            this.prompt.text = undoTextStack.Pop();
+            background.sprite = undoBGStack.Pop();
+            typeTileBlocking = undoBlocking.Pop();
         }
     }
 }

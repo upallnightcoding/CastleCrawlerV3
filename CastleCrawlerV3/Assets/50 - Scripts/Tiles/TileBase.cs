@@ -16,7 +16,7 @@ public interface TileBase
 
     public bool IsSupportProp();
 
-    public void PassThrough(TileMngr tileMngr, TilePosition position, Sprite color);
+    public void Animation(TileMngr tileMngr, TilePosition position, Sprite color, bool firstCall);
 
     public bool IsShowing();
 }

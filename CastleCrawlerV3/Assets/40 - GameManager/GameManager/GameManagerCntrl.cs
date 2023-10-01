@@ -10,6 +10,22 @@ public class GameManagerCntrl : MonoBehaviour
 
     public static GameManagerCntrl Instance = null;
 
+    public void DisplayIllegalMoveBanner() => uiCntrl.DisplayIllegalMoveBanner();
+    public void DisplayBlockedBanner() => uiCntrl.DisplayBlockedBanner();
+
+    public void DisplayBanner(StepValidType type)
+    {
+        switch(type)
+        {
+            case StepValidType.OFF_BOARD:
+                DisplayIllegalMoveBanner();
+                break;
+            case StepValidType.BLOCKED:
+                DisplayBlockedBanner();
+                break;
+        }
+    }
+
     public void Awake()
     {
         if (Instance == null)
@@ -33,11 +49,6 @@ public class GameManagerCntrl : MonoBehaviour
         uiCntrl.DisplayWinBanner();
 
         uiCntrl.AddGameLevel();
-    }
-
-    public void DisplayIllegalMoveBanner()
-    {
-        uiCntrl.DisplayIllegalMoveBanner();
     }
 
     public void OnStartNewGame()

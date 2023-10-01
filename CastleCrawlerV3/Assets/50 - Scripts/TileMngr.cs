@@ -94,12 +94,12 @@ public class TileMngr : MonoBehaviour
     /**
      * PassThrough() - 
      */
-    public void PassThrough(
+    public void Animation(
         TilePosition position,
         Sprite color
     )
     {
-        tileCntrls[position.Col, position.Row].Tile.PassThrough(this, position, color);
+        tileCntrls[position.Col, position.Row].Animation(this, position, color);
     }
 
     private void Set(int col, int row, GameObject tile, TileSO tileSO)

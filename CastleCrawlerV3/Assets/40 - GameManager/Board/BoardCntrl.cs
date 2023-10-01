@@ -118,6 +118,9 @@ public class BoardCntrl : MonoBehaviour
         return (completedMove);
     }
 
+    /**
+     * CheckStepValid() - 
+     */
     private bool CheckStepValid(
         StepValidType isStepValid,
         Sprite color,
@@ -137,11 +140,12 @@ public class BoardCntrl : MonoBehaviour
                 break;
             case StepValidType.PASS_THROUGH:
                 completedMove = true;
-                tileMngr.PassThrough(currentPlayPos, color);
+                tileMngr.Animation(currentPlayPos, color);
                 break;
             case StepValidType.OFF_BOARD:
             case StepValidType.BLOCKED:
                 completedMove = false;
+                GameManagerCntrl.Instance.DisplayBanner(isStepValid);
                 ResetStartingPoint(startingTile, tracking);
                 currentPlayPos = new TilePosition(startingTile);
                 foreach (TilePosition resetPosition in tracking)
@@ -154,6 +158,11 @@ public class BoardCntrl : MonoBehaviour
         return (completedMove);
     }
 
+    /**
+     * MoveToNextTile() - Based on the step, the current player position
+     * is move to the next position on the board based on NORTH, SOUTH,
+     * EAST or WEST.
+     */
     private void MoveToNextTile(string moveName, int step)
     {
         switch (moveName.Substring(step, 1))
@@ -173,6 +182,12 @@ public class BoardCntrl : MonoBehaviour
         }
     }
 
+    /**
+     * ResetStartingPoint() - If a move was either blocked or off the board,
+     * move must return to the starting point.  The starting point is either
+     * the beginning of the move if no steps have been tracked or the next
+     * to the last step.
+     */
     private TilePosition ResetStartingPoint(TilePosition startingTile, List<TilePosition> tracking)
     {
         TilePosition currentPlayPos;
@@ -191,6 +206,9 @@ public class BoardCntrl : MonoBehaviour
 
     #endregion
 
+    /**
+     * UndoPlayerMove() - 
+     */
     public string UndoPlayerMove()
     {
         string moveName = null;
