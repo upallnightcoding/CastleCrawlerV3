@@ -53,9 +53,12 @@ public class BoardCntrl : MonoBehaviour
 
         Stack<Move> moves = CreateAPath();
 
-        PlaceTileOnBoard(gameData.tileShieldSO, gameData.numberShields);
-        PlaceTileOnBoard(gameData.tileBombSO, gameData.numberBombs);
-        PlaceTileOnBoard(gameData.tileHeartSO, gameData.numberHearts);
+        if (moves != null)
+        {
+            PlaceTileOnBoard(gameData.tileShieldSO, gameData.numberShields);
+            PlaceTileOnBoard(gameData.tileBombSO, gameData.numberBombs);
+            PlaceTileOnBoard(gameData.tileHeartSO, gameData.numberHearts);
+        } 
 
         return (moves);
     }
@@ -265,6 +268,7 @@ public class BoardCntrl : MonoBehaviour
     {
         int level = 0;
         int count = 0;
+        bool createdPath = true;
 
         startPosition = SelectStartingPoint();
 
@@ -273,7 +277,7 @@ public class BoardCntrl : MonoBehaviour
         TilePosition tile = new TilePosition(startPosition);
         Stack<Move> moves = new Stack<Move>();
 
-        while (BuildingPath(level) && SafeGuard(count))
+        while (BuildingPath(level) && SafeGuard(count) && createdPath)
         {
             int[] moveIndex = ShuffleMoves();
             Move moveFound = null;
@@ -295,12 +299,19 @@ public class BoardCntrl : MonoBehaviour
                 }
             }
 
+            createdPath = (moveFound != null);
+
             count++;
         }
 
-        tileMngr.CastleTile(finalPosition);
-
-        currentPlayPos = new TilePosition(startPosition);
+        if (createdPath)
+        {
+            tileMngr.CastleTile(finalPosition);
+            currentPlayPos = new TilePosition(startPosition);
+        } else
+        {
+            moves = null;
+        }
 
         return (moves);
     }

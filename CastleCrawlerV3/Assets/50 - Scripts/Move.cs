@@ -35,7 +35,7 @@ public class Move
 
     public void DebugIt()
     {
-        Debug.Log($"Move: {moveName}");
+        //Debug.Log($"Move: {moveName}");
     }
 
     public TilePosition IsValid(TilePosition beginTile, TileMngr tileMgr)

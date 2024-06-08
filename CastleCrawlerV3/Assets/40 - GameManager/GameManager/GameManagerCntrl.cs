@@ -55,10 +55,13 @@ public class GameManagerCntrl : MonoBehaviour
     {
         Stack<Move> moves = boardCntrl.StartNewGame();
 
-        if (moves != null)
+        while (moves == null)
         {
-            uiCntrl.StartNewGame(moves);
+            moves = boardCntrl.StartNewGame();
+            Debug.Log("Continue Creating ...");
         }
+
+        uiCntrl.StartNewGame(moves);
     }
 
     /**

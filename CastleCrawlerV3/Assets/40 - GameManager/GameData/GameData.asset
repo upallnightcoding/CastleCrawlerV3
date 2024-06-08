@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: GameData
   m_EditorClassIdentifier: 
   safeGuardLimit: 500
-  level: 3
-  debugSw: 1
+  level: 5
+  debugSw: 0
   boardSize: 10
   numberShields: 10
   numberBombs: 10
