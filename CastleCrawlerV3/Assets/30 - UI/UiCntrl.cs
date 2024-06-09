@@ -20,6 +20,9 @@ public class UiCntrl : MonoBehaviour
     [SerializeField] private GameObject illegalMoveBanner;
     [SerializeField] private GameObject blockedMoveBanner;
     [SerializeField] private TMP_Text moveCountDownTxt;
+    [SerializeField] private Slider levelSlider;
+
+    public static event System.Action OnYouLooseEvent = delegate { };
 
     // Dictionary of button controllers by name
     private Dictionary<string, DirBtnCntrl> dirBtnDict;
@@ -39,17 +42,25 @@ public class UiCntrl : MonoBehaviour
         listOfDirBtns = new List<GameObject>();
     }
 
-    /**
-     * DisplayIllegalMoveBanner() - Displays the illegal move Banner
-     */
+    // Display the Illegal Move Banner
     public void DisplayIllegalMoveBanner() =>
         StartCoroutine(DisplayBanner(illegalMoveBanner));
 
+    // Display the Looser Banner
+    public void DisplayLooserBanner() =>
+        StartCoroutine(DisplayBanner(looseBanner));
+
+    // Display the Winner Banner
     public void DisplayWinBanner() =>
         StartCoroutine(DisplayBanner(winBanner));
 
-    public void DisplayBlockedBanner() =>
+    // Display the Blocked Move Banner
+    public void DisplayBlockedMoveBanner() =>
         StartCoroutine(DisplayBanner(blockedMoveBanner));
+
+    // Display the Next Level Banner
+    public void DisplayNextLevelBanner() =>
+        StartCoroutine(DisplayBanner(nextLevelBanner));
 
     /**
      * UpdateHeartCount() - 
@@ -64,6 +75,14 @@ public class UiCntrl : MonoBehaviour
         }
     }
 
+    public void SetGameLevel()
+    {
+        levelTxt.text = levelSlider.value.ToString();
+    }
+
+    /**
+     * DisplayBanner() - 
+     */
     IEnumerator DisplayBanner(GameObject banner)
     {
         banner.gameObject.SetActive(true);
@@ -79,7 +98,15 @@ public class UiCntrl : MonoBehaviour
     {
         dirBtnDict[moveName].UpdateMoveCounter();
 
-        moveCountDown.update(-1);
+        CountDownMoveCounter();
+    }
+
+    private void CountDownMoveCounter()
+    {
+        if (!moveCountDown.Update(-1))
+        {
+            InvokeYouLoose();
+        }
     }
 
     /**
@@ -88,7 +115,7 @@ public class UiCntrl : MonoBehaviour
      */
     public void OnBadPlayerMove()
     {
-        moveCountDown.update(-1);
+        CountDownMoveCounter();
     }
 
     /**
@@ -100,12 +127,15 @@ public class UiCntrl : MonoBehaviour
         {
             case 1:
                 star1On.gameObject.SetActive(true);
+                DisplayWinBanner();
                 break;
             case 2:
                 star2On.gameObject.SetActive(true);
+                DisplayWinBanner();
                 break;
             case 3:
                 star3On.gameObject.SetActive(true);
+                DisplayWinBanner();
                 break;
             case 4:
                 star1On.gameObject.SetActive(false);
@@ -113,6 +143,7 @@ public class UiCntrl : MonoBehaviour
                 star3On.gameObject.SetActive(false);
                 levelTxt.text = (++gameData.level).ToString();
                 starCounter = 0;
+                DisplayNextLevelBanner();
                 break;
         }
     }
@@ -194,6 +225,11 @@ public class UiCntrl : MonoBehaviour
         }
     }
 
+    private void InvokeYouLoose()
+    {
+        OnYouLooseEvent.Invoke();
+    }
+
     /**
      * UndoPlayerMove() - Undo a player's move by updating the count of
      * the direction button and counting down to zero the number of turns
@@ -203,9 +239,12 @@ public class UiCntrl : MonoBehaviour
     {
         dirBtnDict[moveName].UndoPlayerMove();
 
-        moveCountDown.update(-1);
+        CountDownMoveCounter();
     }
 
+    /**
+     * IsDirBtnEnabled() - 
+     */
     public bool IsDirBtnEnabled(string moveName)
     {
         return (dirBtnDict[moveName].IsDirBtnEnabled());
@@ -224,9 +263,11 @@ public class UiValue
         textValue.text = initialValue.ToString();
     }
 
-    public void update(int update)
+    public bool Update(int update)
     {
         value += update;
         textValue.text = value.ToString();
+
+        return (value != 0);
     }
 }

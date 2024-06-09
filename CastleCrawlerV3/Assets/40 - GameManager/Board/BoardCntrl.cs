@@ -87,8 +87,6 @@ public class BoardCntrl : MonoBehaviour
         return (currentPlayPos.IsEqual(finalPosition));
     }
 
-    #region PlayerMove
-
     public bool OnPlayerMove(string moveName, Sprite color)
     {
         return(OnPlayerMoveCR(moveName, color));
@@ -113,7 +111,7 @@ public class BoardCntrl : MonoBehaviour
             completedMove = CheckStepValid(isStepValid, color, startingTile, tracking);
         }
 
-        if(completedMove)
+        if (completedMove)
         {
             moveStack.Push(moveName);
         }
@@ -206,8 +204,6 @@ public class BoardCntrl : MonoBehaviour
 
         return (currentPlayPos);
     }
-
-    #endregion
 
     /**
      * UndoPlayerMove() - 

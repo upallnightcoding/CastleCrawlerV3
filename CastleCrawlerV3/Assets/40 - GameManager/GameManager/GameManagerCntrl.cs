@@ -11,7 +11,7 @@ public class GameManagerCntrl : MonoBehaviour
     public static GameManagerCntrl Instance = null;
 
     public void DisplayIllegalMoveBanner() => uiCntrl.DisplayIllegalMoveBanner();
-    public void DisplayBlockedBanner() => uiCntrl.DisplayBlockedBanner();
+    public void DisplayBlockedBanner() => uiCntrl.DisplayBlockedMoveBanner();
 
     public void DisplayBanner(StepValidType type)
     {
@@ -44,13 +44,20 @@ public class GameManagerCntrl : MonoBehaviour
         uiCntrl.UpdateHeartCount(count);
     }
 
-    public void IncreaseGameLevel()
+    /**
+     * IncreaseGameLevel() - Displays the next level banner and 
+     * increments to the next playing level.
+     */
+    public void UpdateGameLevel()
     {
-        uiCntrl.DisplayWinBanner();
-
         uiCntrl.AddGameLevel();
+
+        OnStartNewGame();
     }
 
+    /**
+     * OnStartNewGame() - 
+     */
     public void OnStartNewGame()
     {
         Stack<Move> moves = boardCntrl.StartNewGame();
@@ -58,7 +65,6 @@ public class GameManagerCntrl : MonoBehaviour
         while (moves == null)
         {
             moves = boardCntrl.StartNewGame();
-            Debug.Log("Continue Creating ...");
         }
 
         uiCntrl.StartNewGame(moves);
@@ -80,7 +86,7 @@ public class GameManagerCntrl : MonoBehaviour
 
                 if (boardCntrl.IsFinished() && uiCntrl.TotalPointsIsZero())
                 {
-                    IncreaseGameLevel();
+                    UpdateGameLevel();
                 }
             } else
             {
@@ -100,5 +106,20 @@ public class GameManagerCntrl : MonoBehaviour
         {
             uiCntrl.UndoPlayerMove(moveName);
         }
+    }
+
+    public void OnYouLoose()
+    {
+        uiCntrl.DisplayLooserBanner();
+    }
+
+    public void OnEnable()
+    {
+        UiCntrl.OnYouLooseEvent += OnYouLoose;
+    }
+
+    public void OnDisable()
+    {
+        UiCntrl.OnYouLooseEvent -= OnYouLoose;
     }
 }
