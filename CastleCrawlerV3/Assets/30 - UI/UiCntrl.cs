@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UiCntrl : MonoBehaviour
@@ -21,6 +21,7 @@ public class UiCntrl : MonoBehaviour
     [SerializeField] private GameObject blockedMoveBanner;
     [SerializeField] private TMP_Text moveCountDownTxt;
     [SerializeField] private Slider levelSlider;
+    [SerializeField] private GameObject anotherGameDialog;
 
     public static event System.Action OnYouLooseEvent = delegate { };
 
@@ -63,21 +64,52 @@ public class UiCntrl : MonoBehaviour
         StartCoroutine(DisplayBanner(nextLevelBanner));
 
     /**
-     * UpdateHeartCount() - 
+     * PlayAnotherGameYes() - 
+     */
+    public void PlayAnotherGameYes()
+    {
+        health = 3;
+        UpdateHeartCount(0);
+        levelSlider.value = 4;
+        SetGameLevel();
+        anotherGameDialog.SetActive(false);
+        GameManagerCntrl.Instance.PlayAnotherGameYes();
+    }
+
+    /**
+     * PlayAnotherGameNo() - 
+     */
+    public void PlayAnotherGameNo()
+    {
+        GameManagerCntrl.Instance.PlayAnotherGameNo();
+    }
+
+    /**
+     * UpdateHeartCount() - Update the heart count.  If the heart count 
+     * reaches zero, display the "Play Again" dialog.
      */
     public void UpdateHeartCount(int count)
     {
         health += count;
 
-        if (health > 0)
+        heartsCntTxt.text = health.ToString();
+
+        if (health <= 0)
         {
-            heartsCntTxt.text = health.ToString();
+            anotherGameDialog.SetActive(true);
         }
     }
 
+    /**
+     * SetGameLevel() - 
+     */
     public void SetGameLevel()
     {
         levelTxt.text = levelSlider.value.ToString();
+
+        gameData.level = (int) levelSlider.value;
+
+        starCounter = 0;
     }
 
     /**
@@ -141,7 +173,8 @@ public class UiCntrl : MonoBehaviour
                 star1On.gameObject.SetActive(false);
                 star2On.gameObject.SetActive(false);
                 star3On.gameObject.SetActive(false);
-                levelTxt.text = (++gameData.level).ToString();
+                gameData.level = (++gameData.level) > gameData.maxLevel ? gameData.maxLevel : gameData.level;
+                levelTxt.text = gameData.level.ToString();
                 starCounter = 0;
                 DisplayNextLevelBanner();
                 break;

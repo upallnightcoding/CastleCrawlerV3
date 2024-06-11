@@ -92,12 +92,9 @@ public class TileMngr : MonoBehaviour
     }
 
     /**
-     * PassThrough() - 
+     * Animation() - 
      */
-    public void Animation(
-        TilePosition position,
-        Sprite color
-    )
+    public void Animation(TilePosition position, Sprite color)
     {
         tileCntrls[position.Col, position.Row].Animation(this, position, color);
     }

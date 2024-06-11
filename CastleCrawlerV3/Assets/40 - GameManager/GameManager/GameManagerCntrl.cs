@@ -39,6 +39,23 @@ public class GameManagerCntrl : MonoBehaviour
         }
     }
 
+    /**
+     * PlayAnotherGameYes() - 
+     */
+    public void PlayAnotherGameYes()
+    {
+        OnStartNewGame();
+    }
+
+    /**
+     * PlayAnotherGameNo() - 
+     */
+    public void PlayAnotherGameNo()
+    {
+        Debug.Log("Quit Game ...");
+        //Application.Quit();
+    }
+
     public void UpdateHeartCount(int count)
     {
         uiCntrl.UpdateHeartCount(count);

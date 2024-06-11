@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   safeGuardLimit: 500
   level: 4
-  debugSw: 1
+  maxLevel: 10
+  debugSw: 0
   boardSize: 10
   numberShields: 10
   numberBombs: 25

@@ -290,7 +290,7 @@ public class BoardCntrl : MonoBehaviour
                         moves.Push(move);
                         tile = new TilePosition(finalPosition);
                         level++;
-                        move.DebugIt();
+                        move.DebugIt(gameData.debugSw);
                     }
                 }
             }

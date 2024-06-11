@@ -33,11 +33,20 @@ public class Move
         }
     }
 
-    public void DebugIt()
+    /**
+     * DebugIt() - 
+     */
+    public void DebugIt(bool debugSw)
     {
-        Debug.Log($"Move: {moveName}");
+        if (debugSw)
+        {
+            Debug.Log($"Move: {moveName}");
+        }
     }
 
+    /**
+     * IsValid() - 
+     */
     public TilePosition IsValid(TilePosition beginTile, TileMngr tileMgr)
     {
         bool valid = true;

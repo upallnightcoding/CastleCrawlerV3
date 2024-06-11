@@ -14,6 +14,7 @@ public class GameData : ScriptableObject
     [Header("Game Attributes")]
     public int safeGuardLimit;
     public int level;
+    public int maxLevel;
     public bool debugSw;
     public int boardSize;
 
