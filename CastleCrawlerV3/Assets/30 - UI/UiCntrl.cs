@@ -22,6 +22,7 @@ public class UiCntrl : MonoBehaviour
     [SerializeField] private TMP_Text moveCountDownTxt;
     [SerializeField] private Slider levelSlider;
     [SerializeField] private GameObject anotherGameDialog;
+    [SerializeField] private Image howTo;
 
     public static event System.Action OnYouLooseEvent = delegate { };
 
@@ -74,6 +75,22 @@ public class UiCntrl : MonoBehaviour
         SetGameLevel();
         anotherGameDialog.SetActive(false);
         GameManagerCntrl.Instance.PlayAnotherGameYes();
+    }
+
+    /**
+     * HowToOn() - 
+     */
+    public void HowToOn()
+    {
+        howTo.gameObject.SetActive(true);
+    }
+
+    /**
+     * HowToOff() -
+     */
+    public void HowToOff()
+    {
+        howTo.gameObject.SetActive(false);
     }
 
     /**

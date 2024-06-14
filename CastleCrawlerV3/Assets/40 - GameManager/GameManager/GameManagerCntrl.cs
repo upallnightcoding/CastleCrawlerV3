@@ -52,8 +52,15 @@ public class GameManagerCntrl : MonoBehaviour
      */
     public void PlayAnotherGameNo()
     {
-        Debug.Log("Quit Game ...");
-        //Application.Quit();
+        Application.Quit();
+    }
+
+    /**
+     * HowToOn() 
+     */
+    public void HowToOn()
+    {
+        uiCntrl.HowToOn();
     }
 
     public void UpdateHeartCount(int count)
