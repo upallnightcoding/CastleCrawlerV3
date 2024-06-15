@@ -102,20 +102,26 @@ public class GameManagerCntrl : MonoBehaviour
      */
     public void OnPlayerMove(string move, Sprite color)
     {
-        if (uiCntrl.IsDirBtnEnabled(move))
+        if (uiCntrl.HasMoreMoves())
         {
-            if (boardCntrl.OnPlayerMove(move, color))
+            if (uiCntrl.IsDirBtnEnabled(move))
             {
-                uiCntrl.OnPlayerMove(move);
-
-                if (boardCntrl.IsFinished() && uiCntrl.TotalPointsIsZero())
+                if (boardCntrl.OnPlayerMove(move, color))
                 {
-                    UpdateGameLevel();
+                    uiCntrl.OnPlayerMove(move);
+
+                    if (boardCntrl.IsFinished() && uiCntrl.TotalPointsIsZero())
+                    {
+                        UpdateGameLevel();
+                    }
+                } else
+                {
+                    uiCntrl.OnBadPlayerMove();
                 }
-            } else
-            {
-                uiCntrl.OnBadPlayerMove();
             }
+        } else
+        {
+            uiCntrl.InvokeYouLoose();
         }
     }
 

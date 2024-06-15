@@ -150,12 +150,22 @@ public class UiCntrl : MonoBehaviour
         CountDownMoveCounter();
     }
 
+    /**
+     * CountDownMoveCounter() - Counts down the number of moves.  If the
+     * number of moves reaches 0, the "You Loose" banner is displayed
+     * and no additional moves can be made.
+     */
     private void CountDownMoveCounter()
     {
-        if (!moveCountDown.Update(-1))
+        if (moveCountDown.CheckUpdateDone(-1))
         {
             InvokeYouLoose();
         }
+    }
+
+    public bool HasMoreMoves()
+    {
+        return (moveCountDown.HasMoreMoves());
     }
 
     /**
@@ -275,7 +285,7 @@ public class UiCntrl : MonoBehaviour
         }
     }
 
-    private void InvokeYouLoose()
+    public void InvokeYouLoose()
     {
         OnYouLooseEvent.Invoke();
     }
@@ -313,11 +323,24 @@ public class UiValue
         textValue.text = initialValue.ToString();
     }
 
-    public bool Update(int update)
+    public bool HasMoreMoves()
     {
-        value += update;
-        textValue.text = value.ToString();
+        return (value > 0);
+    }
 
-        return (value != 0);
+    public bool CheckUpdateDone(int update)
+    {
+        bool done = false;
+
+        if (value == 0)
+        {
+            done = true;
+        } else
+        {
+            value += update;
+            textValue.text = value.ToString();
+        }
+
+        return (done);
     }
 }
